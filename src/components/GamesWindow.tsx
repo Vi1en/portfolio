@@ -41,7 +41,7 @@ export const GamesWindow: React.FC<GamesWindowProps> = ({ onClose }) => {
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [memoryScore, setMemoryScore] = useState(0);
 
-  // Snake Game Logic
+  // Snake Game Logic - Simplified
   const moveSnake = useCallback(() => {
     if (snakeGame.gameOver) return;
 
@@ -103,62 +103,58 @@ export const GamesWindow: React.FC<GamesWindowProps> = ({ onClose }) => {
       });
     };
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
   }, [selectedGame]);
 
-  // Snake Game Timer
+  // Snake Game Loop - Simplified
   useEffect(() => {
-    if (selectedGame === 'snake' && !snakeGame.gameOver) {
-      const gameLoop = setInterval(moveSnake, 150);
-      return () => clearInterval(gameLoop);
-    }
-  }, [selectedGame, moveSnake, snakeGame.gameOver]);
+    if (selectedGame !== 'snake' || snakeGame.gameOver) return;
 
-  // Initialize Puzzle
+    const gameInterval = setInterval(() => {
+      moveSnake();
+    }, 200); // Slower speed to reduce glitching
+
+    return () => clearInterval(gameInterval);
+  }, [selectedGame, snakeGame.gameOver, moveSnake]);
+
+  // Number Puzzle Logic
   const shufflePuzzle = () => {
     const shuffled = [...puzzle];
-    for (let i = 0; i < 1000; i++) {
-      const emptyIndex = shuffled.indexOf(0);
-      const neighbors = [];
-      if (emptyIndex % 4 !== 0) neighbors.push(emptyIndex - 1);
-      if (emptyIndex % 4 !== 3) neighbors.push(emptyIndex + 1);
-      if (emptyIndex >= 4) neighbors.push(emptyIndex - 4);
-      if (emptyIndex < 12) neighbors.push(emptyIndex + 4);
-      
-      const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-      [shuffled[emptyIndex], shuffled[randomNeighbor]] = [shuffled[randomNeighbor], shuffled[emptyIndex]];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     setPuzzle(shuffled);
     setPuzzleMoves(0);
   };
 
-  // Puzzle Move Logic
   const movePuzzleTile = (index: number) => {
-    const emptyIndex = puzzle.indexOf(0);
-    const isAdjacent = 
-      (Math.abs(index - emptyIndex) === 1 && Math.floor(index / 4) === Math.floor(emptyIndex / 4)) ||
-      Math.abs(index - emptyIndex) === 4;
-
-    if (isAdjacent) {
-      const newPuzzle = [...puzzle];
+    const newPuzzle = [...puzzle];
+    const emptyIndex = newPuzzle.indexOf(0);
+    
+    // Check if tile can move
+    if (
+      (index === emptyIndex - 1 && index % 4 !== 3) ||
+      (index === emptyIndex + 1 && index % 4 !== 0) ||
+      (index === emptyIndex - 4) ||
+      (index === emptyIndex + 4)
+    ) {
       [newPuzzle[index], newPuzzle[emptyIndex]] = [newPuzzle[emptyIndex], newPuzzle[index]];
       setPuzzle(newPuzzle);
       setPuzzleMoves(prev => prev + 1);
     }
   };
 
-  // Initialize Memory Game
+  // Memory Game Logic
   const initMemoryGame = () => {
-    const symbols = ['🍎', '🍌', '🍇', '🍊', '🍓', '🥝', '🍒', '🥭'];
-    const cards: MemoryCard[] = [];
-    
-    symbols.forEach((symbol, index) => {
-      cards.push(
-        { id: index * 2, value: symbol, isFlipped: false, isMatched: false },
-        { id: index * 2 + 1, value: symbol, isFlipped: false, isMatched: false }
-      );
-    });
+    const values = ['🐱', '🐶', '🐸', '🐵', '🐼', '🐨', '🐯', '🐮'];
+    const cards = [...values, ...values].map((value, index) => ({
+      id: index,
+      value,
+      isFlipped: false,
+      isMatched: false
+    }));
     
     // Shuffle cards
     for (let i = cards.length - 1; i > 0; i--) {
@@ -171,52 +167,50 @@ export const GamesWindow: React.FC<GamesWindowProps> = ({ onClose }) => {
     setMemoryScore(0);
   };
 
-  // Memory Game Logic
   const flipCard = (id: number) => {
-    if (flippedCards.length === 2) return;
-    if (flippedCards.includes(id)) return;
-    if (memoryCards.find(card => card.id === id)?.isMatched) return;
-
-    const newFlippedCards = [...flippedCards, id];
-    setFlippedCards(newFlippedCards);
-
+    if (flippedCards.length >= 2) return;
+    
     setMemoryCards(prev => 
       prev.map(card => 
         card.id === id ? { ...card, isFlipped: true } : card
       )
     );
+    
+    setFlippedCards(prev => [...prev, id]);
+  };
 
-    if (newFlippedCards.length === 2) {
-      const [first, second] = newFlippedCards;
+  useEffect(() => {
+    if (flippedCards.length === 2) {
+      const [first, second] = flippedCards;
       const firstCard = memoryCards.find(card => card.id === first);
       const secondCard = memoryCards.find(card => card.id === second);
-
-      if (firstCard?.value === secondCard?.value) {
-        setTimeout(() => {
-          setMemoryCards(prev => 
-            prev.map(card => 
-              card.id === first || card.id === second 
-                ? { ...card, isMatched: true } 
-                : card
-            )
-          );
-          setFlippedCards([]);
-          setMemoryScore(prev => prev + 10);
-        }, 500);
+      
+      if (firstCard && secondCard && firstCard.value === secondCard.value) {
+        // Match found
+        setMemoryCards(prev => 
+          prev.map(card => 
+            card.id === first || card.id === second 
+              ? { ...card, isMatched: true }
+              : card
+          )
+        );
+        setMemoryScore(prev => prev + 10);
       } else {
+        // No match, flip back after delay
         setTimeout(() => {
           setMemoryCards(prev => 
             prev.map(card => 
               card.id === first || card.id === second 
-                ? { ...card, isFlipped: false } 
+                ? { ...card, isFlipped: false }
                 : card
             )
           );
-          setFlippedCards([]);
         }, 1000);
       }
+      
+      setFlippedCards([]);
     }
-  };
+  }, [flippedCards, memoryCards]);
 
   const resetGame = () => {
     if (selectedGame === 'snake') {
@@ -236,63 +230,57 @@ export const GamesWindow: React.FC<GamesWindowProps> = ({ onClose }) => {
 
   const startGame = (gameName: string) => {
     setSelectedGame(gameName);
-    if (gameName === 'puzzle') {
-      shufflePuzzle();
-    } else if (gameName === 'memory') {
+    if (gameName === 'memory') {
       initMemoryGame();
+    } else if (gameName === 'puzzle') {
+      shufflePuzzle();
     }
   };
 
   return (
     <RetroWindow
-      title="Games.exe - Retro Arcade"
+      title="Games"
       onClose={onClose}
-      initialPosition={{ x: 400, y: 150 }}
-      initialSize={{ width: 450, height: 500 }}
+      initialSize={{ width: 500, height: 400 }}
     >
-      <div className="space-y-4">
+      <div className="h-full max-h-full overflow-auto p-2 break-words w-full max-w-[95vw] mx-auto pb-8">
         {!selectedGame ? (
-          <>
-            <div className="pixel-font text-sm text-accent mb-3">🎮 Select Your Game</div>
-            
-            <div className="space-y-3">
-              <button 
-                className="w-full p-3 border border-border rounded retro-button text-left"
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold text-retro-green mb-4">🎮 Available Games</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
                 onClick={() => startGame('snake')}
+                className="retro-button bg-green-900 hover:bg-green-800 text-green-300 p-4 rounded border border-green-600"
               >
-                <div className="pixel-font text-xs text-retro-green mb-1">🐍 Snake Classic</div>
-                <div className="terminal-font text-xs">Use arrow keys to eat food!</div>
+                <div className="text-2xl mb-2">🐍</div>
+                <div className="font-bold">Snake Game</div>
+                <div className="text-sm">Classic snake game</div>
               </button>
-              
-              <button 
-                className="w-full p-3 border border-border rounded retro-button text-left"
+              <button
                 onClick={() => startGame('puzzle')}
+                className="retro-button bg-blue-900 hover:bg-blue-800 text-blue-300 p-4 rounded border border-blue-600"
               >
-                <div className="pixel-font text-xs text-retro-blue mb-1">🧩 15-Puzzle</div>
-                <div className="terminal-font text-xs">Slide tiles to arrange 1-15</div>
+                <div className="text-2xl mb-2">🧩</div>
+                <div className="font-bold">Number Puzzle</div>
+                <div className="text-sm">Slide tiles to order</div>
               </button>
-              
-              <button 
-                className="w-full p-3 border border-border rounded retro-button text-left"
+              <button
                 onClick={() => startGame('memory')}
+                className="retro-button bg-purple-900 hover:bg-purple-800 text-purple-300 p-4 rounded border border-purple-600"
               >
-                <div className="pixel-font text-xs text-retro-orange mb-1">🧠 Memory Match</div>
-                <div className="terminal-font text-xs">Find matching pairs!</div>
+                <div className="text-2xl mb-2">🧠</div>
+                <div className="font-bold">Memory Game</div>
+                <div className="text-sm">Find matching pairs</div>
               </button>
             </div>
-
-            <div className="bg-terminal-bg p-3 rounded border border-retro-green mt-4">
-              <div className="pixel-font text-xs text-retro-green mb-2">💡 Pro Tip</div>
-              <div className="terminal-font text-xs">
-                All games are fully playable with real mechanics! 🎯
-              </div>
-            </div>
-          </>
+          </div>
         ) : selectedGame === 'snake' ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <div className="pixel-font text-sm text-accent">🐍 Snake Game</div>
-              <div className="pixel-font text-xs">Score: {snakeGame.score}</div>
+              <h2 className="text-xl font-bold text-retro-green">🐍 Snake Game</h2>
+              <button onClick={() => setSelectedGame(null)} className="retro-button">
+                ← Back
+              </button>
             </div>
             
             <div className="bg-black p-2 rounded border-2 border-retro-green">
@@ -319,94 +307,151 @@ export const GamesWindow: React.FC<GamesWindowProps> = ({ onClose }) => {
               </div>
             </div>
 
-            <div className="terminal-font text-xs text-center">
+            {/* Mobile Touch Controls */}
+            <div className="flex justify-center gap-2 mt-4 md:hidden">
+              <button 
+                className="w-12 h-12 bg-muted border border-border rounded flex items-center justify-center"
+                onClick={() => setSnakeGame(prev => 
+                  prev.direction.y !== 1 ? { ...prev, direction: { x: 0, y: -1 } } : prev
+                )}
+              >
+                ↑
+              </button>
+              <div className="flex gap-2">
+                <button 
+                  className="w-12 h-12 bg-muted border border-border rounded flex items-center justify-center"
+                  onClick={() => setSnakeGame(prev => 
+                    prev.direction.x !== 1 ? { ...prev, direction: { x: -1, y: 0 } } : prev
+                  )}
+                >
+                  ←
+                </button>
+                <button 
+                  className="w-12 h-12 bg-muted border border-border rounded flex items-center justify-center"
+                  onClick={() => setSnakeGame(prev => 
+                    prev.direction.x !== -1 ? { ...prev, direction: { x: 1, y: 0 } } : prev
+                  )}
+                >
+                  →
+                </button>
+              </div>
+              <button 
+                className="w-12 h-12 bg-muted border border-border rounded flex items-center justify-center"
+                onClick={() => setSnakeGame(prev => 
+                  prev.direction.y !== -1 ? { ...prev, direction: { x: 0, y: 1 } } : prev
+                )}
+              >
+                ↓
+              </button>
+            </div>
+
+            <div className="terminal-font text-xs text-center mt-4">
               {snakeGame.gameOver ? (
-                <div className="text-red-500">Game Over! Use arrow keys to play</div>
+                <div className="text-red-500">Game Over! Use arrow keys or touch controls to play</div>
               ) : (
-                <div>Use arrow keys to move 🎮</div>
+                <div className="text-green-400">Use arrow keys or touch controls to move 🎮</div>
               )}
             </div>
 
-            <div className="flex gap-2 justify-center">
-              <button className="retro-button text-xs" onClick={resetGame}>
-                🔄 New Game
+            {/* Game Stats */}
+            <div className="mt-4 text-center">
+              <div className="text-yellow-400 text-sm mb-2">🎯 Score: {snakeGame.snake.length - 1}</div>
+              <div className="text-cyan-400 text-xs">🏆 High Score: {Math.max(snakeGame.snake.length - 1, 0)}</div>
+            </div>
+
+            {/* Game Controls */}
+            <div className="mt-4 flex justify-center gap-2">
+              <button 
+                className="retro-button bg-green-900 hover:bg-green-800 text-green-300 px-3 py-1 rounded border border-green-600"
+                onClick={() => {
+                  setSnakeGame({
+                    snake: [{ x: 10, y: 10 }],
+                    food: { x: 15, y: 15 },
+                    direction: { x: 0, y: -1 },
+                    gameOver: false,
+                    score: 0
+                  });
+                }}
+              >
+                🔄 Restart
               </button>
-              <button className="retro-button text-xs" onClick={() => setSelectedGame(null)}>
-                🏠 Back to Menu
+              <button 
+                className="retro-button bg-blue-900 hover:bg-blue-800 text-blue-300 px-3 py-1 rounded border border-blue-600"
+                onClick={() => {
+                  setSnakeGame(prev => ({ ...prev, score: 0 }));
+                }}
+              >
+                🏆 Reset Score
               </button>
             </div>
           </div>
         ) : selectedGame === 'puzzle' ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <div className="pixel-font text-sm text-accent">🧩 15-Puzzle</div>
-              <div className="pixel-font text-xs">Moves: {puzzleMoves}</div>
+              <h2 className="text-xl font-bold text-retro-green">🧩 Number Puzzle</h2>
+              <button onClick={() => setSelectedGame(null)} className="retro-button">
+                ← Back
+              </button>
             </div>
             
-            <div className="grid grid-cols-4 gap-1 w-fit mx-auto bg-muted p-2 rounded">
+            <div className="grid grid-cols-4 gap-1 w-64 h-64 mx-auto">
               {puzzle.map((number, index) => (
-                <div
+                <button
                   key={index}
-                  className={`w-12 h-12 flex items-center justify-center text-xs font-bold cursor-pointer
-                    ${number === 0 ? 'bg-transparent' : 'bg-window-header border border-window-border retro-button'}
-                  `}
                   onClick={() => movePuzzleTile(index)}
+                  className={`w-16 h-16 text-lg font-bold border-2 ${
+                    number === 0 
+                      ? 'bg-gray-800 border-gray-600' 
+                      : 'bg-blue-600 border-blue-500 hover:bg-blue-500'
+                  }`}
                 >
-                  {number !== 0 && number}
-                </div>
+                  {number === 0 ? '' : number}
+                </button>
               ))}
             </div>
-
-            <div className="terminal-font text-xs text-center">
-              Click tiles next to empty space to move them
-            </div>
-
-            <div className="flex gap-2 justify-center">
-              <button className="retro-button text-xs" onClick={shufflePuzzle}>
-                🔀 Shuffle
-              </button>
-              <button className="retro-button text-xs" onClick={() => setSelectedGame(null)}>
-                🏠 Back to Menu
+            
+            <div className="text-center">
+              <p className="text-sm mb-2">Moves: {puzzleMoves}</p>
+              <button onClick={shufflePuzzle} className="retro-button">
+                🔄 Shuffle
               </button>
             </div>
           </div>
-        ) : selectedGame === 'memory' ? (
-          <div className="space-y-3">
+        ) : (
+          <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <div className="pixel-font text-sm text-accent">🧠 Memory Match</div>
-              <div className="pixel-font text-xs">Score: {memoryScore}</div>
+              <h2 className="text-xl font-bold text-retro-green">🧠 Memory Game</h2>
+              <button onClick={() => setSelectedGame(null)} className="retro-button">
+                ← Back
+              </button>
             </div>
             
-            <div className="grid grid-cols-4 gap-2 w-fit mx-auto">
+            <div className="grid grid-cols-4 gap-2">
               {memoryCards.map((card) => (
-                <div
+                <button
                   key={card.id}
-                  className={`w-12 h-12 flex items-center justify-center text-lg cursor-pointer rounded border-2
-                    ${card.isFlipped || card.isMatched 
-                      ? 'bg-white border-retro-green' 
-                      : 'bg-muted border-border retro-button'}
-                  `}
                   onClick={() => flipCard(card.id)}
+                  className={`w-16 h-16 text-2xl border-2 ${
+                    card.isMatched 
+                      ? 'bg-green-600 border-green-500' 
+                      : card.isFlipped 
+                        ? 'bg-blue-600 border-blue-500' 
+                        : 'bg-gray-800 border-gray-600 hover:bg-gray-700'
+                  }`}
                 >
-                  {(card.isFlipped || card.isMatched) ? card.value : '?'}
-                </div>
+                  {(card.isFlipped || card.isMatched) ? card.value : ''}
+                </button>
               ))}
             </div>
-
-            <div className="terminal-font text-xs text-center">
-              Click cards to flip and find matching pairs!
-            </div>
-
-            <div className="flex gap-2 justify-center">
-              <button className="retro-button text-xs" onClick={initMemoryGame}>
+            
+            <div className="text-center">
+              <p className="text-sm mb-2">Score: {memoryScore}</p>
+              <button onClick={initMemoryGame} className="retro-button">
                 🔄 New Game
               </button>
-              <button className="retro-button text-xs" onClick={() => setSelectedGame(null)}>
-                🏠 Back to Menu
-              </button>
             </div>
           </div>
-        ) : null}
+        )}
       </div>
     </RetroWindow>
   );

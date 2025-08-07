@@ -41,6 +41,47 @@ export const RetroWindow: React.FC<RetroWindowProps> = ({
   };
 
   useEffect(() => {
+    // Center window on open for all devices, and resize for mobile
+    const centerWindow = () => {
+      if (windowRef.current) {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        let width = initialSize.width;
+        let height = initialSize.height;
+        
+        // On mobile, use a smaller size for better usability
+        if (vw <= 768) {
+          width = vw * 0.85;
+          height = vh * 0.6;
+        }
+        
+        // Calculate center position
+        const centerX = Math.max((vw - width) / 2, 0);
+        const centerY = Math.max((vh - height) / 2, 0);
+        
+        // Set the window size and position directly
+        windowRef.current.style.width = `${width}px`;
+        windowRef.current.style.height = `${height}px`;
+        windowRef.current.style.left = `${centerX}px`;
+        windowRef.current.style.top = `${centerY}px`;
+        
+        setPosition({
+          x: centerX,
+          y: centerY,
+        });
+      }
+    };
+
+    // Center immediately and also on window resize
+    centerWindow();
+    window.addEventListener('resize', centerWindow);
+    
+    return () => {
+      window.removeEventListener('resize', centerWindow);
+    };
+  }, [initialSize.width, initialSize.height]);
+
+  useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging) return;
       
@@ -72,15 +113,12 @@ export const RetroWindow: React.FC<RetroWindowProps> = ({
       ref={windowRef}
       className={`absolute z-10 ${windowClasses} ${className} responsive-retro-window`}
       style={{
-        left: position.x,
-        top: position.y,
-        width: initialSize.width,
-        height: initialSize.height,
         minWidth: 250,
         minHeight: 150,
         maxWidth: '100vw',
         maxHeight: '100vh',
         boxSizing: 'border-box',
+        overflow: 'hidden',
       }}
     >
       <div 
@@ -96,10 +134,10 @@ export const RetroWindow: React.FC<RetroWindowProps> = ({
           )}
           {closable && (
             <button 
-              className="w-4 h-4 bg-red-500 border border-red-600 hover:bg-red-400"
+              className="w-5 h-5 bg-red-500 border border-red-600 hover:bg-red-400"
               onClick={onClose}
             >
-              <X className="w-2 h-2 m-auto" />
+              <X className="w-3 h-3 m-auto" />
             </button>
           )}
         </div>

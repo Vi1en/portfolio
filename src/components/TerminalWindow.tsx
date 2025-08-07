@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { RetroWindow } from './RetroWindow';
 
 interface TerminalWindowProps {
-  onClose?: () => void;
+  onClose: () => void;
 }
 
 export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onClose }) => {
@@ -73,24 +73,26 @@ export const TerminalWindow: React.FC<TerminalWindowProps> = ({ onClose }) => {
       title="Terminal - Developer Console"
       onClose={onClose}
       initialPosition={{ x: 300, y: 200 }}
-      initialSize={{ width: 600, height: 400 }}
+      initialSize={{ width: 400, height: 400 }}
       isTerminal={true}
     >
-      <div className="font-mono text-sm">
-        {output.map((line, index) => (
-          <div key={index} className="mb-1">
-            {line.startsWith('$') ? (
-              <span className="terminal-prompt">{line}</span>
-            ) : (
-              <span className="text-terminal-text">{line}</span>
-            )}
+      <div className="h-full max-h-full overflow-auto p-2 break-words w-full max-w-[95vw] mx-auto pb-8">
+        <div className="font-mono text-sm w-full">
+          {output.map((line, index) => (
+            <div key={index} className="mb-1">
+              {line.startsWith('$') ? (
+                <span className="terminal-prompt">{line}</span>
+              ) : (
+                <span className="text-terminal-text">{line}</span>
+              )}
+            </div>
+          ))}
+          <div className="mb-1">
+            <span className="terminal-prompt">
+              {currentLine}
+              {showCursor && <span className="blink">█</span>}
+            </span>
           </div>
-        ))}
-        <div className="mb-1">
-          <span className="terminal-prompt">
-            {currentLine}
-            {showCursor && <span className="blink">█</span>}
-          </span>
         </div>
       </div>
     </RetroWindow>
