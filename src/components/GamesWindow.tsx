@@ -107,13 +107,13 @@ export const GamesWindow: React.FC<GamesWindowProps> = ({ onClose }) => {
     return () => document.removeEventListener('keydown', handleKeyPress);
   }, [selectedGame]);
 
-  // Snake Game Loop - Simplified
+  // Snake Game Loop - Optimized for smooth gameplay
   useEffect(() => {
     if (selectedGame !== 'snake' || snakeGame.gameOver) return;
 
     const gameInterval = setInterval(() => {
       moveSnake();
-    }, 200); // Slower speed to reduce glitching
+    }, 250); // Slightly slower for smoother gameplay
 
     return () => clearInterval(gameInterval);
   }, [selectedGame, snakeGame.gameOver, moveSnake]);
@@ -308,26 +308,32 @@ export const GamesWindow: React.FC<GamesWindowProps> = ({ onClose }) => {
             </div>
 
             {/* Mobile Touch Controls */}
-            <div className="flex justify-center gap-2 mt-4 md:hidden">
+            <div className="flex flex-col items-center gap-1 mt-4 md:hidden">
+              {/* Up Button */}
               <button 
-                className="w-12 h-12 bg-muted border border-border rounded flex items-center justify-center"
+                className="w-12 h-12 bg-green-900 hover:bg-green-800 text-green-300 border-2 border-green-600 rounded-lg flex items-center justify-center text-xl font-bold shadow-lg active:scale-95 transition-transform"
                 onClick={() => setSnakeGame(prev => 
                   prev.direction.y !== 1 ? { ...prev, direction: { x: 0, y: -1 } } : prev
                 )}
               >
                 ↑
               </button>
-              <div className="flex gap-2">
+              
+              {/* Left, Right Buttons */}
+              <div className="flex items-center gap-1">
                 <button 
-                  className="w-12 h-12 bg-muted border border-border rounded flex items-center justify-center"
+                  className="w-12 h-12 bg-blue-900 hover:bg-blue-800 text-blue-300 border-2 border-blue-600 rounded-lg flex items-center justify-center text-xl font-bold shadow-lg active:scale-95 transition-transform"
                   onClick={() => setSnakeGame(prev => 
                     prev.direction.x !== 1 ? { ...prev, direction: { x: -1, y: 0 } } : prev
                   )}
                 >
                   ←
                 </button>
+                
+                <div className="w-12 h-12"></div> {/* Spacer */}
+                
                 <button 
-                  className="w-12 h-12 bg-muted border border-border rounded flex items-center justify-center"
+                  className="w-12 h-12 bg-blue-900 hover:bg-blue-800 text-blue-300 border-2 border-blue-600 rounded-lg flex items-center justify-center text-xl font-bold shadow-lg active:scale-95 transition-transform"
                   onClick={() => setSnakeGame(prev => 
                     prev.direction.x !== -1 ? { ...prev, direction: { x: 1, y: 0 } } : prev
                   )}
@@ -335,8 +341,10 @@ export const GamesWindow: React.FC<GamesWindowProps> = ({ onClose }) => {
                   →
                 </button>
               </div>
+              
+              {/* Down Button */}
               <button 
-                className="w-12 h-12 bg-muted border border-border rounded flex items-center justify-center"
+                className="w-12 h-12 bg-green-900 hover:bg-green-800 text-green-300 border-2 border-green-600 rounded-lg flex items-center justify-center text-xl font-bold shadow-lg active:scale-95 transition-transform"
                 onClick={() => setSnakeGame(prev => 
                   prev.direction.y !== -1 ? { ...prev, direction: { x: 0, y: 1 } } : prev
                 )}
@@ -345,11 +353,12 @@ export const GamesWindow: React.FC<GamesWindowProps> = ({ onClose }) => {
               </button>
             </div>
 
+            {/* Game Instructions */}
             <div className="terminal-font text-xs text-center mt-4">
               {snakeGame.gameOver ? (
-                <div className="text-red-500">Game Over! Use arrow keys or touch controls to play</div>
+                <div className="text-red-500 font-bold">🎮 Game Over! Tap Restart to play again</div>
               ) : (
-                <div className="text-green-400">Use arrow keys or touch controls to move 🎮</div>
+                <div className="text-green-400">🎮 Use touch controls below or arrow keys to move</div>
               )}
             </div>
 

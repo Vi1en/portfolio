@@ -20,7 +20,6 @@ export const ResumeWindow: React.FC<ResumeWindowProps> = ({ onClose }) => {
             <p className="text-sm text-muted-foreground">Full Stack Developer</p>
             <div className="flex flex-wrap justify-center gap-4 mt-2 text-xs">
               <span>📧 manabmallick3345@gmail.com</span>
-              <span>📱 +91 98765 43210</span>
               <span>📍 Kolkata, India</span>
             </div>
           </div>

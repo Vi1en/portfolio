@@ -59,7 +59,7 @@ export const AboutWindow: React.FC<AboutWindowProps> = ({ onClose }) => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`retro-button px-3 py-1 rounded text-xs ${
+                  className={`retro-button px-4 py-2 rounded text-sm font-medium whitespace-nowrap ${
                     activeTab === tab.id 
                       ? 'bg-green-900 text-green-300 border-green-600' 
                       : 'bg-muted text-muted-foreground border-border'
