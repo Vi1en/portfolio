@@ -70,14 +70,17 @@ export const RetroWindow: React.FC<RetroWindowProps> = ({
   return (
     <div
       ref={windowRef}
-      className={`absolute z-10 ${windowClasses} ${className}`}
+      className={`absolute z-10 ${windowClasses} ${className} responsive-retro-window`}
       style={{
         left: position.x,
         top: position.y,
         width: initialSize.width,
         height: initialSize.height,
         minWidth: 250,
-        minHeight: 150
+        minHeight: 150,
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        boxSizing: 'border-box',
       }}
     >
       <div 
@@ -101,7 +104,7 @@ export const RetroWindow: React.FC<RetroWindowProps> = ({
           )}
         </div>
       </div>
-      <div className="p-3 overflow-auto h-full">
+      <div className="p-3 overflow-auto h-full max-h-[calc(100vh-2.5rem)] responsive-retro-window-content">
         {children}
       </div>
     </div>
