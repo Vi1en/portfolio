@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { RetroWindow } from './RetroWindow';
+import manabAvatar from '../assets/manab-avatar.png';
 
 interface AboutWindowProps {
   onClose?: () => void;
@@ -9,19 +10,19 @@ export const AboutWindow: React.FC<AboutWindowProps> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState('about');
 
   const skills = [
-    { name: 'React', level: 90, color: 'bg-blue-500' },
-    { name: 'TypeScript', level: 85, color: 'bg-blue-600' },
-    { name: 'Node.js', level: 80, color: 'bg-green-500' },
-    { name: 'Python', level: 75, color: 'bg-yellow-500' },
-    { name: 'AWS', level: 70, color: 'bg-orange-500' },
-    { name: 'Docker', level: 65, color: 'bg-blue-400' }
+    { name: 'React & TypeScript', level: 90, color: 'bg-blue-500' },
+    { name: 'Node.js & Express', level: 85, color: 'bg-green-500' },
+    { name: 'Python & Django', level: 80, color: 'bg-yellow-500' },
+    { name: 'MongoDB & SQL', level: 75, color: 'bg-purple-500' },
+    { name: 'AWS & Docker', level: 70, color: 'bg-orange-500' },
+    { name: 'UI/UX Design', level: 65, color: 'bg-pink-500' }
   ];
 
   return (
     <RetroWindow
-      title="About Developer"
+      title="About Manab"
       onClose={onClose}
-      initialSize={{ width: 500, height: 450 }}
+      initialSize={{ width: 600, height: 500 }}
     >
       <div className="h-full max-h-full overflow-auto p-2 break-words w-full max-w-[95vw] mx-auto pb-8">
         <div className="flex flex-col md:flex-row gap-4">
@@ -29,7 +30,7 @@ export const AboutWindow: React.FC<AboutWindowProps> = ({ onClose }) => {
           <div className="flex-shrink-0">
             <div className="relative">
               <img 
-                src="/src/assets/manab-avatar.png" 
+                src={manabAvatar} 
                 alt="Manab Mallick" 
                 className="w-32 h-32 rounded-lg border-2 border-retro-green mx-auto md:mx-0"
               />
