@@ -50,7 +50,7 @@ export const AboutWindow: React.FC<AboutWindowProps> = ({ onClose }) => {
           {/* Content Section */}
           <div className="flex-1">
             {/* Tabs */}
-            <div className="flex gap-2 mb-4">
+            <div className="flex flex-col md:flex-row gap-2 mb-4">
               {[
                 { id: 'about', label: 'About', icon: '👨‍💻' },
                 { id: 'skills', label: 'Skills', icon: '⚡' },
@@ -59,7 +59,7 @@ export const AboutWindow: React.FC<AboutWindowProps> = ({ onClose }) => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`retro-button px-4 py-2 rounded text-sm font-medium whitespace-nowrap ${
+                  className={`retro-button px-6 py-3 rounded text-sm font-medium text-center flex-1 ${
                     activeTab === tab.id 
                       ? 'bg-green-900 text-green-300 border-green-600' 
                       : 'bg-muted text-muted-foreground border-border'
