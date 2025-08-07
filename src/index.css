@@ -295,6 +295,7 @@
       background-size: contain;
       min-height: 100dvh;
       padding: 0.5rem;
+      padding-top: 4.5rem;
     }
     .desktop-icon {
       font-size: 0.75rem;
@@ -310,12 +311,13 @@
       font-size: 0.75rem;
     }
     .retro-window, .terminal-window {
+      margin-top: 1.5rem;
+      left: 50% !important;
+      transform: translateX(-50%);
       min-width: 180px;
       min-height: 120px;
       width: 90vw !important;
       height: 60vh !important;
-      left: 5vw !important;
-      top: 10vh !important;
       max-width: 98vw;
       max-height: 80vh;
     }
@@ -326,6 +328,7 @@
       background-size: cover;
       min-height: 100dvh;
       padding: 0.25rem;
+      padding-top: 4.5rem;
     }
     .desktop-icon {
       font-size: 0.5rem;
@@ -341,12 +344,13 @@
       font-size: 0.5rem;
     }
     .retro-window, .terminal-window {
+      margin-top: 1.5rem;
+      left: 50% !important;
+      transform: translateX(-50%);
       min-width: 120px;
       min-height: 80px;
       width: 98vw !important;
       height: 60vh !important;
-      left: 1vw !important;
-      top: 10vh !important;
       max-width: 99vw;
       max-height: 80vh;
     }

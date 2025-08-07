@@ -41,7 +41,7 @@ export const Desktop: React.FC = () => {
   return (
     <div className="relative w-screen h-screen meet-developer-bg overflow-hidden scan-lines">
       {/* Desktop Icons */}
-      <div className="absolute top-4 left-4 grid grid-cols-1 gap-2 md:gap-3">
+      <div className="md:absolute md:top-4 md:left-4 md:grid md:grid-cols-1 md:gap-2 md:gap-3 flex flex-row md:flex-col gap-2 px-2 pt-2 md:px-0 md:pt-0 overflow-x-auto z-20 w-full md:w-auto">
         <DesktopIcon 
           icon="ℹ️" 
           label="About" 
