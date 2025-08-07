@@ -246,16 +246,26 @@
 
   /* Meet the Developer Background */
   .meet-developer-bg {
-    background: 
-      /* Dark base */
-      linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%),
-      /* Pixel art grid pattern */
-      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 100% 100%, 4px 4px, 4px 4px;
+    background:
+      /* Animated pixel grid overlay */
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 4px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 4px),
+      /* Retro color overlay */
+      linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%),
+      /* Subtle vignette */
+      radial-gradient(ellipse at center, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.5) 100%);
+    background-size: 100% 100%, 4px 4px, 100% 100%, 100% 100%;
+    background-blend-mode: lighten, lighten, normal, multiply;
     background-position: center;
     position: relative;
     min-height: 100vh;
+    transition: background 0.5s;
+    animation: pixelGridMove 8s linear infinite;
+  }
+
+  @keyframes pixelGridMove {
+    0% { background-position: 0 0, 0 0, center, center; }
+    100% { background-position: 0 4px, 4px 0, center, center; }
   }
 
   /* Decorative pixel art elements */
@@ -283,36 +293,62 @@
   @media (max-width: 768px) {
     .meet-developer-bg {
       background-size: contain;
+      min-height: 100dvh;
+      padding: 0.5rem;
     }
-    
     .desktop-icon {
       font-size: 0.75rem;
       padding: 0.5rem;
+      width: 2.5rem;
+      height: 3.5rem;
     }
-    
     .retro-button {
       font-size: 0.75rem;
       padding: 0.25rem 0.5rem;
     }
-    
     .pixel-font {
       font-size: 0.75rem;
+    }
+    .retro-window, .terminal-window {
+      min-width: 180px;
+      min-height: 120px;
+      width: 90vw !important;
+      height: 60vh !important;
+      left: 5vw !important;
+      top: 10vh !important;
+      max-width: 98vw;
+      max-height: 80vh;
     }
   }
 
   @media (max-width: 480px) {
     .meet-developer-bg {
       background-size: cover;
+      min-height: 100dvh;
+      padding: 0.25rem;
     }
-    
     .desktop-icon {
       font-size: 0.5rem;
       padding: 0.25rem;
+      width: 2rem;
+      height: 2.5rem;
     }
-    
     .retro-button {
       font-size: 0.5rem;
       padding: 0.125rem 0.25rem;
+    }
+    .pixel-font {
+      font-size: 0.5rem;
+    }
+    .retro-window, .terminal-window {
+      min-width: 120px;
+      min-height: 80px;
+      width: 98vw !important;
+      height: 60vh !important;
+      left: 1vw !important;
+      top: 10vh !important;
+      max-width: 99vw;
+      max-height: 80vh;
     }
   }
 
