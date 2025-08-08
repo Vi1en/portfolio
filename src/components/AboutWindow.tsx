@@ -130,17 +130,40 @@ export const AboutWindow: React.FC<AboutWindowProps> = ({ onClose }) => {
                   <div className="space-y-4">
                     <div className="border-l-2 border-green-500 pl-4">
                       <h4 className="font-medium text-green-400">Senior Developer</h4>
-                      <p className="text-xs text-muted-foreground">Tech Company • 2022-Present</p>
+                      <p className="text-xs text-muted-foreground">Tech Company • 2023-Present</p>
                       <p className="text-sm mt-1">Leading development of scalable web applications using React and Node.js</p>
                     </div>
+                    
                     <div className="border-l-2 border-blue-500 pl-4">
-                      <h4 className="font-medium text-blue-400">Full Stack Developer</h4>
-                      <p className="text-xs text-muted-foreground">Startup • 2020-2022</p>
+                      <h4 className="font-medium text-blue-400">AI/ML Project Developer</h4>
+                      <p className="text-xs text-muted-foreground">Personal Projects • 2023-Present</p>
+                      <ul className="text-sm mt-1 space-y-1">
+                        <li>• <strong>Medical Symptom Diagnoser:</strong> Built an AI-powered system for preliminary medical symptom analysis</li>
+                        <li>• <strong>Fashion Recommendation Box:</strong> Developed AI/ML-based fashion recommendation system</li>
+                      </ul>
+                    </div>
+                    
+                    <div className="border-l-2 border-purple-500 pl-4">
+                      <h4 className="font-medium text-purple-400">Hackathon Winner</h4>
+                      <p className="text-xs text-muted-foreground">Status Code 1 • 2024</p>
+                      <p className="text-sm mt-1">Won first place in Status Code 1 hackathon with innovative project solution</p>
+                    </div>
+                    
+                    <div className="border-l-2 border-orange-500 pl-4">
+                      <h4 className="font-medium text-orange-400">Hackathon Organizer & Volunteer</h4>
+                      <p className="text-xs text-muted-foreground">Multiple Events • 2023-Present</p>
+                      <p className="text-sm mt-1">Organized and volunteered for multiple hackathons, helping create opportunities for developers</p>
+                    </div>
+                    
+                    <div className="border-l-2 border-pink-500 pl-4">
+                      <h4 className="font-medium text-pink-400">Full Stack Developer</h4>
+                      <p className="text-xs text-muted-foreground">Startup • 2022-2023</p>
                       <p className="text-sm mt-1">Built and maintained multiple client projects with modern technologies</p>
                     </div>
-                    <div className="border-l-2 border-purple-500 pl-4">
-                      <h4 className="font-medium text-purple-400">Junior Developer</h4>
-                      <p className="text-xs text-muted-foreground">Agency • 2019-2020</p>
+                    
+                    <div className="border-l-2 border-cyan-500 pl-4">
+                      <h4 className="font-medium text-cyan-400">Junior Developer</h4>
+                      <p className="text-xs text-muted-foreground">Agency • 2022</p>
                       <p className="text-sm mt-1">Started my journey with frontend development and basic backend tasks</p>
                     </div>
                   </div>

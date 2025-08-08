@@ -87,9 +87,9 @@ export const ResumeWindow: React.FC<ResumeWindowProps> = ({ onClose }) => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-bold text-sm">Bachelor of Technology in Computer Science</h3>
-                    <p className="text-xs text-muted-foreground">University of Technology</p>
+                    <p className="text-xs text-muted-foreground">Indian Institute of Information Technology Kalyani</p>
                   </div>
-                  <span className="text-xs text-muted-foreground">2020 - 2024</span>
+                  <span className="text-xs text-muted-foreground">2022 - 2026</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   Relevant coursework: Data Structures, Algorithms, Database Systems, 
@@ -106,14 +106,13 @@ export const ResumeWindow: React.FC<ResumeWindowProps> = ({ onClose }) => {
               <div className="bg-muted p-3 rounded border border-border">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-bold text-sm">Full Stack Developer</h3>
-                    <p className="text-xs text-muted-foreground">Tech Solutions Inc.</p>
+                    <h3 className="font-bold text-sm">Senior Developer</h3>
+                    <p className="text-xs text-muted-foreground">Tech Company</p>
                   </div>
-                  <span className="text-xs text-muted-foreground">2024 - Present</span>
+                  <span className="text-xs text-muted-foreground">2023 - Present</span>
                 </div>
                 <ul className="text-xs text-muted-foreground mt-2 space-y-1 list-disc list-inside">
-                  <li>Developed and maintained React-based web applications</li>
-                  <li>Implemented RESTful APIs using Node.js and Express</li>
+                  <li>Leading development of scalable web applications using React and Node.js</li>
                   <li>Collaborated with cross-functional teams using Agile methodology</li>
                   <li>Optimized application performance and user experience</li>
                 </ul>
@@ -122,15 +121,43 @@ export const ResumeWindow: React.FC<ResumeWindowProps> = ({ onClose }) => {
               <div className="bg-muted p-3 rounded border border-border">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-bold text-sm">Junior Developer</h3>
-                    <p className="text-xs text-muted-foreground">StartupXYZ</p>
+                    <h3 className="font-bold text-sm">AI/ML Project Developer</h3>
+                    <p className="text-xs text-muted-foreground">Personal Projects</p>
                   </div>
-                  <span className="text-xs text-muted-foreground">2023 - 2024</span>
+                  <span className="text-xs text-muted-foreground">2023 - Present</span>
+                </div>
+                <ul className="text-xs text-muted-foreground mt-2 space-y-1 list-disc list-inside">
+                  <li><strong>Medical Symptom Diagnoser:</strong> Built AI-powered system for preliminary medical symptom analysis</li>
+                  <li><strong>Fashion Recommendation Box:</strong> Developed AI/ML-based fashion recommendation system</li>
+                  <li>Implemented machine learning algorithms for pattern recognition and predictions</li>
+                </ul>
+              </div>
+
+              <div className="bg-muted p-3 rounded border border-border">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-bold text-sm">Full Stack Developer</h3>
+                    <p className="text-xs text-muted-foreground">Startup</p>
+                  </div>
+                  <span className="text-xs text-muted-foreground">2022 - 2023</span>
                 </div>
                 <ul className="text-xs text-muted-foreground mt-2 space-y-1 list-disc list-inside">
                   <li>Built responsive web applications using modern frameworks</li>
                   <li>Integrated third-party APIs and payment gateways</li>
                   <li>Participated in code reviews and technical discussions</li>
+                </ul>
+              </div>
+
+              <div className="bg-muted p-3 rounded border border-border">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-bold text-sm">Junior Developer</h3>
+                    <p className="text-xs text-muted-foreground">Agency</p>
+                  </div>
+                  <span className="text-xs text-muted-foreground">2022</span>
+                </div>
+                <ul className="text-xs text-muted-foreground mt-2 space-y-1 list-disc list-inside">
+                  <li>Started journey with frontend development and basic backend tasks</li>
                   <li>Mentored junior developers and interns</li>
                 </ul>
               </div>
@@ -141,6 +168,20 @@ export const ResumeWindow: React.FC<ResumeWindowProps> = ({ onClose }) => {
           <div>
             <h2 className="text-lg font-bold text-retro-green mb-2">🚀 Projects</h2>
             <div className="space-y-2">
+              <div className="bg-muted p-3 rounded border border-border">
+                <h3 className="font-bold text-sm">Medical Symptom Diagnoser</h3>
+                <p className="text-xs text-muted-foreground">
+                  AI-powered system for preliminary medical symptom analysis. Built using Python, 
+                  machine learning algorithms, and natural language processing for accurate symptom assessment.
+                </p>
+              </div>
+              <div className="bg-muted p-3 rounded border border-border">
+                <h3 className="font-bold text-sm">Fashion Recommendation Box</h3>
+                <p className="text-xs text-muted-foreground">
+                  AI/ML-based fashion recommendation system that suggests personalized clothing 
+                  based on user preferences, style analysis, and trending patterns.
+                </p>
+              </div>
               <div className="bg-muted p-3 rounded border border-border">
                 <h3 className="font-bold text-sm">E-Commerce Platform</h3>
                 <p className="text-xs text-muted-foreground">
@@ -159,10 +200,36 @@ export const ResumeWindow: React.FC<ResumeWindowProps> = ({ onClose }) => {
             </div>
           </div>
 
+          {/* Achievements */}
+          <div>
+            <h2 className="text-lg font-bold text-retro-green mb-2">🏆 Achievements</h2>
+            <div className="space-y-2">
+              <div className="bg-muted p-3 rounded border border-border">
+                <h3 className="font-bold text-sm">Hackathon Winner - Status Code 1</h3>
+                <p className="text-xs text-muted-foreground">2024</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Won first place in Status Code 1 hackathon with innovative project solution, 
+                  demonstrating exceptional problem-solving and technical skills.
+                </p>
+              </div>
+              <div className="bg-muted p-3 rounded border border-border">
+                <h3 className="font-bold text-sm">Hackathon Organizer & Volunteer</h3>
+                <p className="text-xs text-muted-foreground">2023 - Present</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Organized and volunteered for multiple hackathons, helping create opportunities 
+                  for developers and fostering the tech community.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Certifications */}
           <div>
             <h2 className="text-lg font-bold text-retro-green mb-2">🏆 Certifications</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+              <div className="bg-muted p-2 rounded border border-border">
+                <strong>Hackathon Winner 2024</strong> - Status Code 1
+              </div>
               <div className="bg-muted p-2 rounded border border-border">
                 <strong>AWS Certified Developer</strong> - Amazon Web Services
               </div>
