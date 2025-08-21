@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fashion Stylist - Professional Style Recommendations</title>
+    <link rel="stylesheet" href="FashionRecommendationBox.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .hero-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            backdrop-filter: blur(15px);
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3.5em;
+            margin: 0 0 15px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.4em;
+            color: #666;
+            margin: 0 0 25px 0;
+            line-height: 1.6;
+        }
+        
+        .feature-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #dee2e6;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        
+        .feature-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .feature-desc {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .app-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            backdrop-filter: blur(15px);
+        }
+        
+        .app-title {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 700;
+        }
+        
+        .app-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .selection-group {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 20px;
+            border: 2px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+        
+        .selection-group:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+        
+        .selection-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 1.1em;
+        }
+        
+        .selection-dropdown {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            background: white;
+            color: #333;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .selection-dropdown:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .generate-btn, .reset-btn {
+            padding: 18px 35px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 200px;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+        }
+        
+        .generate-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(108, 117, 125, 0.6);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            margin: 30px 0;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .recommendations {
+            margin-top: 40px;
+        }
+        
+        .recommendations h3 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+        
+        .recommendation-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .recommendation-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .recommendation-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .item-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .item-details {
+            flex: 1;
+        }
+        
+        .item-text {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .tips-section {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 2px solid #ffc107;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(255,193,7,0.2);
+        }
+        
+        .tips-title {
+            color: #856404;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .tip-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #ffc107;
+        }
+        
+        .tip-card strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .color-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin: 3px;
+            font-weight: 500;
+        }
+        
+        .color-tag.best {
+            background: #28a745;
+            color: white;
+        }
+        
+        .color-tag.avoid {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .body-tips-section {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            border: 2px solid #17a2b8;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(23,162,184,0.2);
+        }
+        
+        .body-tips-title {
+            color: #0c5460;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+        
+        .body-tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .body-tip-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #17a2b8;
+        }
+        
+        .body-tip-card strong {
+            color: #0c5460;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .body-tip-card ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .body-tip-card li {
+            color: #0c5460;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .style-tag {
+            background: #17a2b8;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin: 3px;
+            display: inline-block;
+        }
+        
+        .debug-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 25px 0;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .debug-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .debug-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        
+        .debug-item strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .debug-value {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5em;
+            }
+            
+            .selection-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .generate-btn, .reset-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="hero-section">
+            <h1 class="hero-title">👗 AI Fashion Stylist</h1>
+            <p class="hero-subtitle">Get personalized, professional fashion recommendations based on your unique style, body type, and preferences. Transform your wardrobe with AI-powered styling advice!</p>
+            
+            <div class="feature-highlights">
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">Color Analysis</div>
+                    <div class="feature-desc">Discover the perfect colors for your skin tone</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📐</div>
+                    <div class="feature-title">Body Shape Styling</div>
+                    <div class="feature-desc">Learn how to dress for your unique body shape</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌤️</div>
+                    <div class="feature-title">Seasonal Guidance</div>
+                    <div class="feature-desc">Get weather-appropriate outfit suggestions</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💼</div>
+                    <div class="feature-title">Occasion Matching</div>
+                    <div class="feature-desc">Perfect outfits for every event and situation</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="app-container">
+            <h2 class="app-title">🎯 Your Personal Style Profile</h2>
+            <p class="app-subtitle">Select your preferences to receive customized fashion recommendations</p>
+            
+            <div id="root"></div>
+        </div>
+    </div>
+
+    <!-- React CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Component Script -->
+    <script type="text/babel">
+        const { useState } = React;
+
+        const SimpleFashionTest = () => {
+            const [selectedGender, setSelectedGender] = useState('');
+            const [selectedStyle, setSelectedStyle] = useState('');
+            const [selectedOccasion, setSelectedOccasion] = useState('');
+            const [selectedSeason, setSelectedSeason] = useState('');
+            const [selectedSkinTone, setSelectedSkinTone] = useState('');
+            const [selectedBodyShape, setSelectedBodyShape] = useState('');
+            const [selectedHeight, setSelectedHeight] = useState('');
+            const [recommendations, setRecommendations] = useState([]);
+            const [isLoading, setIsLoading] = useState(false);
+
+            const genders = ['Male', 'Female', 'Non-binary'];
+            const styles = ['Casual', 'Formal', 'Streetwear', 'Vintage', 'Minimalist'];
+            const occasions = ['Work', 'Weekend', 'Party', 'Date Night', 'Travel', 'Sport'];
+            const seasons = ['Spring', 'Summer', 'Fall', 'Winter'];
+            
+            // Skin tone categories
+            const skinTones = ['Fair', 'Light', 'Medium', 'Olive', 'Dark', 'Deep'];
+            
+            // Body shape categories
+            const bodyShapes = ['Rectangle', 'Triangle', 'Inverted Triangle', 'Hourglass', 'Oval', 'Diamond'];
+            
+            // Height categories
+            const heights = ['Petite (under 5\'4")', 'Average (5\'4"-5\'8")', 'Tall (over 5\'8")'];
+
+            // Enhanced fashion database with detailed styling information
+            const fashionDatabase = {
+                'Male': {
+                    'Casual': {
+                        'Work': {
+                            'Spring': [
+                                {
+                                    item: 'Oxford button-down shirt with chino pants',
+                                    colors: {
+                                        'Fair': ['Light blue', 'White', 'Pale pink'],
+                                        'Light': ['Navy blue', 'Light gray', 'Mint green'],
+                                        'Medium': ['Olive green', 'Burnt orange', 'Navy blue'],
+                                        'Olive': ['Deep burgundy', 'Forest green', 'Navy blue'],
+                                        'Dark': ['Cream', 'Light blue', 'Coral'],
+                                        'Deep': ['Gold', 'Cream', 'Light blue']
+                                    },
+                                    fit: {
+                                        'Rectangle': 'Regular fit shirt, straight leg chinos with slight taper',
+                                        'Triangle': 'Fitted shirt, bootcut chinos to balance proportions',
+                                        'Inverted Triangle': 'Relaxed fit shirt, slim chinos to balance broad shoulders',
+                                        'Hourglass': 'Slim fit shirt and chinos for defined silhouette',
+                                        'Oval': 'Comfortable fit shirt with stretch, straight leg chinos',
+                                        'Diamond': 'Loose fit shirt, straight leg chinos for comfort'
+                                    },
+                                    height: {
+                                        'Petite': 'Shorter shirt hem, ankle-length chinos',
+                                        'Average': 'Standard shirt length, full-length chinos',
+                                        'Tall': 'Longer shirt hem, full-length chinos'
+                                    }
+                                },
+                                {
+                                    item: 'Polo shirt with dark wash jeans',
+                                    colors: {
+                                        'Fair': ['Navy blue', 'Forest green', 'Burgundy'],
+                                        'Light': ['Olive green', 'Navy blue', 'Charcoal'],
+                                        'Medium': ['Rust orange', 'Navy blue', 'Olive green'],
+                                        'Olive': ['Deep burgundy', 'Navy blue', 'Charcoal'],
+                                        'Dark': ['Cream', 'Light blue', 'Coral'],
+                                        'Deep': ['Gold', 'Cream', 'Light blue']
+                                    },
+                                    fit: {
+                                        'Rectangle': 'Classic fit polo, straight leg jeans with slight taper',
+                                        'Triangle': 'Fitted polo, bootcut jeans to add volume to lower body',
+                                        'Inverted Triangle': 'Relaxed polo, slim jeans to balance broad shoulders',
+                                        'Hourglass': 'Slim fit polo, straight leg jeans for defined silhouette',
+                                        'Oval': 'Comfortable fit polo with stretch, straight leg jeans',
+                                        'Diamond': 'Loose polo, straight leg jeans for comfort'
+                                    },
+                                    height: {
+                                        'Petite': 'Shorter polo hem, ankle-length jeans',
+                                        'Average': 'Standard polo length, full-length jeans',
+                                        'Tall': 'Longer polo hem, full-length jeans'
+                                    }
+                                },
+                                {
+                                    item: 'Sweater vest with button-down shirt and chinos',
+                                    colors: {
+                                        'Fair': ['Cream', 'Light gray', 'Pale blue'],
+                                        'Light': ['Navy blue', 'Charcoal', 'Olive green'],
+                                        'Medium': ['Burgundy', 'Forest green', 'Navy blue'],
+                                        'Olive': ['Deep burgundy', 'Navy blue', 'Charcoal'],
+                                        'Dark': ['Cream', 'Light blue', 'Gold'],
+                                        'Deep': ['Gold', 'Cream', 'Light blue']
+                                    },
+                                    fit: {
+                                        'Rectangle': 'Fitted vest, regular fit shirt, straight leg chinos',
+                                        'Triangle': 'Fitted vest, fitted shirt, bootcut chinos',
+                                        'Inverted Triangle': 'Relaxed vest, fitted shirt, slim chinos',
+                                        'Hourglass': 'Slim fit vest and shirt, straight leg chinos',
+                                        'Oval': 'Comfortable fit vest and shirt, stretch chinos',
+                                        'Diamond': 'Loose vest, comfortable shirt, straight leg chinos'
+                                    },
+                                    height: {
+                                        'Petite': 'Shorter vest, ankle-length chinos',
+                                        'Average': 'Standard vest length, full-length chinos',
+                                        'Tall': 'Longer vest, full-length chinos'
+                                    }
+                                }
+                            ],
+                            'Summer': [
+                                'Linen button-down shirt with chino shorts',
+                                'Polo shirt with khaki pants',
+                                'Cotton t-shirt with chino pants'
+                            ],
+                            'Fall': [
+                                'Merino wool sweater with dark wash jeans',
+                                'Blazer with t-shirt and dark jeans',
+                                'Turtleneck sweater with chino pants'
+                            ],
+                            'Winter': [
+                                'Wool sweater with dark wash jeans',
+                                'Fleece jacket with jeans and thermal base layer',
+                                'Thermal shirt with chino pants and sweater'
+                            ]
+                        },
+                        'Weekend': {
+                            'Spring': [
+                                'Denim jacket with t-shirt and dark jeans',
+                                'Sneakers with jogger pants',
+                                'Hoodie with shorts and sneakers'
+                            ],
+                            'Summer': [
+                                'Tank top with shorts and sandals',
+                                'Polo shirt with shorts and sneakers',
+                                'Lightweight t-shirt with joggers'
+                            ],
+                            'Fall': [
+                                'Flannel shirt with dark jeans and boots',
+                                'Sweatshirt with jogger pants and sneakers',
+                                'Denim jacket with t-shirt and jeans'
+                            ],
+                            'Winter': [
+                                'Puffer jacket with jeans and thermal base layer',
+                                'Beanie with sweater and dark jeans',
+                                'Scarf with coat and jeans'
+                            ]
+                        },
+                        'Party': {
+                            'Spring': [
+                                'Button-down shirt with dark wash jeans and dress shoes',
+                                'Blazer with t-shirt and dark jeans',
+                                'Polo shirt with chino pants and loafers'
+                            ],
+                            'Summer': [
+                                'Linen shirt with chino pants and loafers',
+                                'Polo shirt with dress pants and dress shoes',
+                                'Button-down shirt with shorts and boat shoes'
+                            ],
+                            'Fall': [
+                                'Sweater with dark wash jeans and boots',
+                                'Blazer with t-shirt and dark jeans',
+                                'Turtleneck with chino pants and dress shoes'
+                            ],
+                            'Winter': [
+                                'Wool sweater with dark jeans and dress shoes',
+                                'Blazer with turtleneck and dark jeans',
+                                'Sweater vest with button-down and chinos'
+                            ]
+                        },
+                        'Date Night': {
+                            'Spring': [
+                                'Slim-fit button-down shirt with dark wash jeans',
+                                'Blazer with t-shirt and dark jeans',
+                                'Polo shirt with chino pants and loafers'
+                            ],
+                            'Summer': [
+                                'Linen button-down shirt with chino pants',
+                                'Polo shirt with dress pants and dress shoes',
+                                'Button-down shirt with dark jeans and loafers'
+                            ],
+                            'Fall': [
+                                'Sweater with dark wash jeans and boots',
+                                'Blazer with t-shirt and dark jeans',
+                                'Turtleneck with chino pants and dress shoes'
+                            ],
+                            'Winter': [
+                                'Wool sweater with dark jeans and dress shoes',
+                                'Blazer with turtleneck and dark jeans',
+                                'Sweater vest with button-down and chinos'
+                            ]
+                        },
+                        'Travel': {
+                            'Spring': [
+                                'Comfortable t-shirt with stretch jogger pants',
+                                'Hoodie with stretch pants and sneakers',
+                                'Button-down shirt with stretch chinos'
+                            ],
+                            'Summer': [
+                                'Moisture-wicking t-shirt with travel shorts',
+                                'Light hoodie with stretch pants and sneakers',
+                                'Linen shirt with stretch pants'
+                            ],
+                            'Fall': [
+                                'Sweater with stretch pants and comfortable shoes',
+                                'Hoodie with stretch jeans and sneakers',
+                                'Button-down shirt with stretch chinos'
+                            ],
+                            'Winter': [
+                                'Wool sweater with stretch pants and comfortable boots',
+                                'Warm hoodie with stretch jeans and boots',
+                                'Thermal shirt with stretch pants'
+                            ]
+                        },
+                        'Sport': {
+                            'Spring': [
+                                'Athletic t-shirt with performance shorts',
+                                'Performance hoodie with jogger pants',
+                                'Moisture-wicking shirt with athletic pants'
+                            ],
+                            'Summer': [
+                                'Moisture-wicking tank top with performance shorts',
+                                'Light performance hoodie with jogger pants',
+                                'Athletic t-shirt with performance shorts'
+                            ],
+                            'Fall': [
+                                'Long-sleeve athletic top with jogger pants',
+                                'Performance hoodie with athletic pants',
+                                'Moisture-wicking shirt with performance pants'
+                            ],
+                            'Winter': [
+                                'Thermal athletic top with performance pants',
+                                'Warm performance hoodie with jogger pants',
+                                'Moisture-wicking base layer with athletic pants'
+                            ]
+                        }
+                    },
+                    'Formal': {
+                        'Work': {
+                            'Spring': [
+                                'Tailored suit with dress shirt',
+                                'Dress pants with button-down',
+                                'Blazer with chinos and shirt'
+                            ],
+                            'Summer': [
+                                'Lightweight suit',
+                                'Linen pants with silk shirt',
+                                'Seersucker blazer with chinos'
+                            ],
+                            'Fall': [
+                                'Wool suit with tie',
+                                'Turtleneck with blazer',
+                                'Dress pants with sweater'
+                            ],
+                            'Winter': [
+                                'Heavy wool suit',
+                                'Cashmere sweater with dress pants',
+                                'Wool coat over suit'
+                            ]
+                        },
+                        'Weekend': {
+                            'Spring': [
+                                'Blazer with t-shirt and jeans',
+                                'Dress pants with polo shirt',
+                                'Loafers with chinos'
+                            ],
+                            'Summer': [
+                                'Linen blazer with shorts',
+                                'Dress shirt with chinos',
+                                'Espadrilles with everything'
+                            ],
+                            'Fall': [
+                                'Tweed blazer with jeans',
+                                'Dress pants with sweater',
+                                'Oxford shoes with chinos'
+                            ],
+                            'Winter': [
+                                'Wool blazer with jeans',
+                                'Dress pants with turtleneck',
+                                'Dress boots with pants'
+                            ]
+                        },
+                        'Party': {
+                            'Spring': [
+                                'Full suit with dress shirt',
+                                'Dress pants with silk shirt',
+                                'Dress shoes with everything'
+                            ],
+                            'Summer': [
+                                'Lightweight suit',
+                                'Dress pants with linen shirt',
+                                'Loafers with suit'
+                            ],
+                            'Fall': [
+                                'Wool suit with tie',
+                                'Dress pants with blazer',
+                                'Oxford shoes with suit'
+                            ],
+                            'Winter': [
+                                'Heavy wool suit',
+                                'Dress pants with sweater',
+                                'Dress boots with suit'
+                            ]
+                        },
+                        'Date Night': {
+                            'Spring': [
+                                'Slim-fit suit with dress shirt',
+                                'Dress pants with fitted shirt',
+                                'Oxford shoes with everything'
+                            ],
+                            'Summer': [
+                                'Lightweight suit',
+                                'Dress pants with fitted shirt',
+                                'Loafers with suit'
+                            ],
+                            'Fall': [
+                                'Wool suit with tie',
+                                'Dress pants with fitted shirt',
+                                'Oxford shoes with suit'
+                            ],
+                            'Winter': [
+                                'Heavy wool suit',
+                                'Dress pants with fitted shirt',
+                                'Dress boots with suit'
+                            ]
+                        },
+                        'Travel': {
+                            'Spring': [
+                                'Travel blazer with dress pants',
+                                'Dress shirt with chinos',
+                                'Comfortable dress shoes'
+                            ],
+                            'Summer': [
+                                'Lightweight blazer with dress pants',
+                                'Linen shirt with chinos',
+                                'Comfortable loafers'
+                            ],
+                            'Fall': [
+                                'Wool blazer with dress pants',
+                                'Dress shirt with chinos',
+                                'Comfortable oxford shoes'
+                            ],
+                            'Winter': [
+                                'Heavy wool blazer with dress pants',
+                                'Dress shirt with chinos',
+                                'Comfortable dress boots'
+                            ]
+                        },
+                        'Sport': {
+                            'Spring': [
+                                'Athletic blazer with performance pants',
+                                'Moisture-wicking shirt with pants',
+                                'Athletic dress shoes'
+                            ],
+                            'Summer': [
+                                'Lightweight athletic blazer with performance pants',
+                                'Moisture-wicking shirt with pants',
+                                'Athletic dress shoes'
+                            ],
+                            'Fall': [
+                                'Performance blazer with athletic pants',
+                                'Moisture-wicking shirt with pants',
+                                'Athletic dress shoes'
+                            ],
+                            'Winter': [
+                                'Warm athletic blazer with performance pants',
+                                'Thermal shirt with pants',
+                                'Athletic dress boots'
+                            ]
+                        }
+                    },
+                    'Streetwear': [
+                        'Hoodie with joggers',
+                        'T-shirt with cargo pants',
+                        'Sneakers with everything'
+                    ],
+                    'Vintage': [
+                        'Retro button-down with high-waist pants',
+                        'Vintage blazer with jeans',
+                        'Classic sneakers with everything'
+                    ],
+                    'Minimalist': [
+                        'Clean t-shirt with tailored pants',
+                        'Simple blazer with minimal jeans',
+                        'Minimal sneakers with everything'
+                    ]
+                },
+                'Female': {
+                    'Casual': {
+                        'Work': {
+                            'Spring': [
+                                {
+                                    item: 'Light blazer with jeans',
+                                    colors: {
+                                        'Fair': ['Blush pink', 'Light blue', 'Cream'],
+                                        'Light': ['Sage green', 'Dusty blue', 'Cream'],
+                                        'Medium': ['Terracotta', 'Olive green', 'Navy blue'],
+                                        'Olive': ['Deep burgundy', 'Forest green', 'Navy blue'],
+                                        'Dark': ['Cream', 'Light blue', 'Coral'],
+                                        'Deep': ['Gold', 'Cream', 'Light blue']
+                                    },
+                                    fit: {
+                                        'Rectangle': 'Structured blazer, straight leg jeans',
+                                        'Triangle': 'Fitted blazer, bootcut jeans',
+                                        'Inverted Triangle': 'Relaxed blazer, slim jeans',
+                                        'Hourglass': 'Fitted blazer, high-waist jeans',
+                                        'Oval': 'Comfortable blazer, stretch jeans',
+                                        'Diamond': 'Loose blazer, straight leg jeans'
+                                    },
+                                    height: {
+                                        'Petite': 'Cropped blazer, ankle-length jeans',
+                                        'Average': 'Standard lengths',
+                                        'Tall': 'Long blazer, full-length jeans'
+                                    }
+                                },
+                                {
+                                    item: 'Silk blouse with high-waist pants',
+                                    colors: {
+                                        'Fair': ['Lavender', 'Mint green', 'Blush pink'],
+                                        'Light': ['Mauve', 'Sage green', 'Dusty blue'],
+                                        'Medium': ['Terracotta', 'Burgundy', 'Navy blue'],
+                                        'Olive': ['Deep burgundy', 'Forest green', 'Teal'],
+                                        'Dark': ['Cream', 'Coral', 'Emerald green'],
+                                        'Deep': ['Gold', 'Cream', 'Light blue']
+                                    },
+                                    fit: {
+                                        'Rectangle': 'Fitted blouse, high-waist pants',
+                                        'Triangle': 'Fitted blouse, wide-leg pants',
+                                        'Inverted Triangle': 'Relaxed blouse, fitted pants',
+                                        'Hourglass': 'Fitted blouse, high-waist pants',
+                                        'Oval': 'Comfortable blouse, stretch pants',
+                                        'Diamond': 'Loose blouse, straight leg pants'
+                                    },
+                                    height: {
+                                        'Petite': 'Cropped blouse, ankle-length pants',
+                                        'Average': 'Standard lengths',
+                                        'Tall': 'Long blouse, full-length pants'
+                                    }
+                                }
+                            ],
+                            'Summer': [
+                                'Linen shirt with shorts',
+                                'Cotton dress',
+                                'T-shirt with khakis'
+                            ],
+                            'Fall': [
+                                'Sweater with jeans',
+                                'Blazer with t-shirt',
+                                'Turtleneck with pants'
+                            ],
+                            'Winter': [
+                                'Wool sweater with jeans',
+                                'Fleece jacket',
+                                'Thermal top with pants'
+                            ]
+                        },
+                        'Weekend': [
+                            'Denim jacket with dress',
+                            'Sneakers with leggings',
+                            'Hoodie with shorts'
+                        ],
+                        'Party': [
+                            'Dress with blazer',
+                            'Blouse with skirt',
+                            'Heels with dress pants'
+                        ],
+                        'Date Night': [
+                            'Fitted dress with heels',
+                            'Blouse with high-waist pants',
+                            'Statement jewelry with everything'
+                        ],
+                        'Travel': [
+                            'Comfortable dress with sneakers',
+                            'Layering pieces with stretch pants',
+                            'Comfortable shoes with everything'
+                        ],
+                        'Sport': [
+                            'Athletic top with leggings',
+                            'Performance jacket with shorts',
+                            'Running shoes with everything'
+                        ]
+                    },
+                    'Formal': [
+                        'Tailored suit with blouse',
+                        'Pencil skirt with blazer',
+                        'Dress pants with shirt'
+                    ],
+                    'Streetwear': [
+                        'Hoodie with joggers',
+                        'T-shirt with cargo pants',
+                        'Sneakers with everything'
+                    ],
+                    'Vintage': [
+                        'Retro dress with vintage accessories',
+                        'Vintage blazer with high-waist pants',
+                        'Classic heels with everything'
+                    ],
+                    'Minimalist': [
+                        'Clean blouse with tailored pants',
+                        'Simple dress with minimal accessories',
+                        'Minimal heels with everything'
+                    ]
+                },
+                'Non-binary': {
+                    'Casual': [
+                        'Androgynous blazer with pants',
+                        'Neutral shirt with chinos',
+                        'Unisex sweater with pants'
+                    ],
+                    'Formal': [
+                        'Androgynous suit with neutral shirt',
+                        'Unisex skirt with blazer',
+                        'Neutral dress pants with shirt'
+                    ],
+                    'Streetwear': [
+                        'Unisex hoodie with joggers',
+                        'Neutral t-shirt with cargo pants',
+                        'Androgynous sneakers with everything'
+                    ],
+                    'Vintage': [
+                        'Retro androgynous pieces',
+                        'Vintage neutral blazer',
+                        'Classic unisex shoes'
+                    ],
+                    'Minimalist': [
+                        'Clean unisex pieces',
+                        'Simple androgynous cuts',
+                        'Minimal neutral accessories'
+                    ]
+                }
+            };
+            
+            // Color palette recommendations based on skin tone
+            const colorPalettes = {
+                'Fair': {
+                    best: ['Blush pink', 'Light blue', 'Cream', 'Mint green', 'Lavender'],
+                    avoid: ['Pure white', 'Bright yellow', 'Neon colors'],
+                    description: 'Soft, muted tones work best. Avoid harsh contrasts.'
+                },
+                'Light': {
+                    best: ['Sage green', 'Dusty blue', 'Cream', 'Mauve', 'Taupe'],
+                    avoid: ['Bright orange', 'Neon green', 'Pure white'],
+                    description: 'Earthy tones and muted colors are flattering.'
+                },
+                'Medium': {
+                    best: ['Terracotta', 'Olive green', 'Navy blue', 'Burgundy', 'Mustard'],
+                    avoid: ['Pastel pink', 'Light yellow', 'Mint green'],
+                    description: 'Rich, warm colors and jewel tones work beautifully.'
+                },
+                'Olive': {
+                    best: ['Deep burgundy', 'Forest green', 'Navy blue', 'Rust', 'Teal'],
+                    avoid: ['Bright yellow', 'Neon pink', 'Pastel blue'],
+                    description: 'Deep, rich colors and earth tones are most flattering.'
+                },
+                'Dark': {
+                    best: ['Cream', 'Light blue', 'Coral', 'Gold', 'Emerald green'],
+                    avoid: ['Brown', 'Dark gray', 'Black'],
+                    description: 'Bright, vibrant colors and light neutrals pop beautifully.'
+                },
+                'Deep': {
+                    best: ['Gold', 'Cream', 'Light blue', 'Coral', 'Emerald green'],
+                    avoid: ['Brown', 'Dark gray', 'Black'],
+                    description: 'Bold, bright colors and metallic tones are stunning.'
+                }
+            };
+            
+            // Body shape styling tips
+            const bodyShapeTips = {
+                'Rectangle': {
+                    tips: ['Add definition with belts', 'Create curves with peplum tops', 'Use layering for dimension'],
+                    best: ['Structured pieces', 'Belted items', 'Layered looks'],
+                    avoid: ['Boxy cuts', 'Oversized items']
+                },
+                'Triangle': {
+                    tips: ['Balance top and bottom', 'Draw attention upward', 'Use structured tops'],
+                    best: ['Fitted tops', 'Bootcut pants', 'Structured shoulders'],
+                    avoid: ['Loose tops', 'Skinny pants']
+                },
+                'Inverted Triangle': {
+                    tips: ['Balance broad shoulders', 'Add volume to lower body', 'Use V-necks'],
+                    best: ['V-neck tops', 'Full skirts', 'Wide-leg pants'],
+                    avoid: ['Padded shoulders', 'Tight tops']
+                },
+                'Hourglass': {
+                    tips: ['Emphasize waist', 'Balance top and bottom', 'Use fitted silhouettes'],
+                    best: ['Belted items', 'Fitted dresses', 'High-waist pants'],
+                    avoid: ['Oversized items', 'Boxy cuts']
+                },
+                'Oval': {
+                    tips: ['Create vertical lines', 'Use structured pieces', 'Add definition'],
+                    best: ['Structured jackets', 'Vertical stripes', 'Belted items'],
+                    avoid: ['Horizontal stripes', 'Oversized items']
+                },
+                'Diamond': {
+                    tips: ['Balance proportions', 'Use structured pieces', 'Add definition'],
+                    best: ['Structured jackets', 'Fitted tops', 'Straight leg pants'],
+                    avoid: ['Loose tops', 'Skinny pants']
+                }
+            };
+
+            const generateRecommendations = () => {
+                if (!selectedGender || !selectedStyle || !selectedOccasion || !selectedSeason || !selectedSkinTone || !selectedBodyShape || !selectedHeight) {
+                    alert('Please select all options!');
+                    return;
+                }
+
+                console.log('Generating recommendations for:', {
+                    gender: selectedGender,
+                    style: selectedStyle,
+                    occasion: selectedOccasion,
+                    season: selectedSeason,
+                    skinTone: selectedSkinTone,
+                    bodyShape: selectedBodyShape,
+                    height: selectedHeight
+                });
+
+                setIsLoading(true);
+                
+                setTimeout(() => {
+                    const genderData = fashionDatabase[selectedGender];
+                    console.log('Gender data:', genderData);
+                    
+                    let recs = [];
+                    
+                    // Check for detailed recommendations first
+                    if (genderData && genderData[selectedStyle] && genderData[selectedStyle][selectedOccasion] && genderData[selectedStyle][selectedOccasion][selectedSeason]) {
+                        recs = genderData[selectedStyle][selectedOccasion][selectedSeason];
+                    }
+                    // Check for style-level recommendations
+                    else if (genderData && genderData[selectedStyle] && genderData[selectedStyle][selectedOccasion]) {
+                        recs = genderData[selectedStyle][selectedOccasion];
+                    }
+                    // Check for style-only recommendations
+                    else if (genderData && genderData[selectedStyle]) {
+                        recs = genderData[selectedStyle];
+                    }
+                    
+                    console.log('Found recommendations:', recs);
+                    
+                    if (recs && recs.length > 0) {
+                        // Process recommendations
+                        const processedRecs = recs.map(rec => {
+                            if (typeof rec === 'string') {
+                                return rec; // Handle simple string recommendations
+                            }
+                            
+                            // Handle detailed object recommendations
+                            let details = rec.item;
+                            
+                            // Add color recommendations if skin tone is selected
+                            if (selectedSkinTone && rec.colors && rec.colors[selectedSkinTone]) {
+                                details += ` | Colors: ${rec.colors[selectedSkinTone].join(', ')}`;
+                            }
+                            
+                            // Add fit recommendations if body shape is selected
+                            if (selectedBodyShape && rec.fit && rec.fit[selectedBodyShape]) {
+                                details += ` | Fit: ${rec.fit[selectedBodyShape]}`;
+                            }
+                            
+                            // Add height recommendations if height is selected
+                            if (selectedHeight && rec.height) {
+                                const heightKey = selectedHeight.split(' ')[0]; // Extract "Petite", "Average", or "Tall"
+                                if (rec.height[heightKey]) {
+                                    details += ` | Length: ${rec.height[heightKey]}`;
+                                }
+                            }
+                            
+                            return details;
+                        });
+                        
+                        setRecommendations(processedRecs);
+                    } else {
+                        console.log('No specific recommendations found, generating fallback recommendations');
+                        
+                        // Generate fallback recommendations based on available data
+                        const fallbackRecs = [];
+                        
+                        if (genderData && genderData[selectedStyle]) {
+                            // Get any available recommendations for the style
+                            const styleData = genderData[selectedStyle];
+                            if (typeof styleData === 'object') {
+                                // Find any occasion or season data
+                                for (const occasion in styleData) {
+                                    if (styleData[occasion]) {
+                                        if (Array.isArray(styleData[occasion])) {
+                                            fallbackRecs.push(...styleData[occasion].slice(0, 2));
+                                        } else if (typeof styleData[occasion] === 'object') {
+                                            for (const season in styleData[occasion]) {
+                                                if (styleData[occasion][season] && Array.isArray(styleData[occasion][season])) {
+                                                    fallbackRecs.push(...styleData[occasion][season].slice(0, 2));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (fallbackRecs.length > 0) {
+                            // Process fallback recommendations
+                            const processedFallbacks = fallbackRecs.map(rec => {
+                                if (typeof rec === 'string') {
+                                    return rec;
+                                }
+                                return rec.item || 'Fashion recommendation';
+                            });
+                            
+                            setRecommendations([
+                                ...processedFallbacks.slice(0, 3),
+                                '💡 Tip: These are general recommendations. For more specific advice, try different combinations.'
+                            ]);
+                        } else {
+                            setRecommendations([
+                                '💡 No specific recommendations found for this exact combination.',
+                                '🎯 Try these popular combinations:',
+                                '• Male + Casual + Work + Spring',
+                                '• Female + Casual + Work + Spring',
+                                '• Non-binary + Casual + Work + Spring'
+                            ]);
+                        }
+                    }
+                    setIsLoading(false);
+                }, 1000);
+            };
+
+            const resetSelections = () => {
+                setSelectedGender('');
+                setSelectedStyle('');
+                setSelectedOccasion('');
+                setSelectedSeason('');
+                setSelectedSkinTone('');
+                setSelectedBodyShape('');
+                setSelectedHeight('');
+                setRecommendations([]);
+            };
+
+            return (
+                <div>
+                    {/* Debug Info Panel */}
+                    <div className="debug-info">
+                        <h3 style={{textAlign: 'center', marginBottom: '20px', fontSize: '1.3em'}}>📊 Your Current Selections</h3>
+                        <div className="debug-grid">
+                            <div className="debug-item">
+                                <strong>👤 Gender</strong>
+                                <div className="debug-value">{selectedGender || 'Not selected'}</div>
+                            </div>
+                            <div className="debug-item">
+                                <strong>🎨 Style</strong>
+                                <div className="debug-value">{selectedStyle || 'Not selected'}</div>
+                            </div>
+                            <div className="debug-item">
+                                <strong>🎉 Occasion</strong>
+                                <div className="debug-value">{selectedOccasion || 'Not selected'}</div>
+                            </div>
+                            <div className="debug-item">
+                                <strong>🌤️ Season</strong>
+                                <div className="debug-value">{selectedSeason || 'Not selected'}</div>
+                            </div>
+                            <div className="debug-item">
+                                <strong>🎨 Skin Tone</strong>
+                                <div className="debug-value">{selectedSkinTone || 'Not selected'}</div>
+                            </div>
+                            <div className="debug-item">
+                                <strong>📐 Body Shape</strong>
+                                <div className="debug-value">{selectedBodyShape || 'Not selected'}</div>
+                            </div>
+                            <div className="debug-item">
+                                <strong>📏 Height</strong>
+                                <div className="debug-value">{selectedHeight || 'Not selected'}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Selection Grid */}
+                    <div className="selection-grid">
+                        <div className="selection-group">
+                            <label>Gender Identity</label>
+                            <select 
+                                value={selectedGender} 
+                                onChange={(e) => setSelectedGender(e.target.value)}
+                                className="selection-dropdown"
+                            >
+                                <option value="">Choose gender...</option>
+                                {genders.map(gender => (
+                                    <option key={gender} value={gender}>{gender}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="selection-group">
+                            <label>Style Preference</label>
+                            <select 
+                                value={selectedStyle} 
+                                onChange={(e) => setSelectedStyle(e.target.value)}
+                                className="selection-dropdown"
+                            >
+                                <option value="">Choose your style...</option>
+                                {styles.map(style => (
+                                    <option key={style} value={style}>{style}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="selection-group">
+                            <label>Occasion</label>
+                            <select 
+                                value={selectedOccasion} 
+                                onChange={(e) => setSelectedOccasion(e.target.value)}
+                                className="selection-dropdown"
+                            >
+                                <option value="">Choose occasion...</option>
+                                {occasions.map(occasion => (
+                                    <option key={occasion} value={occasion}>{occasion}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="selection-group">
+                            <label>Season</label>
+                            <select 
+                                value={selectedSeason} 
+                                onChange={(e) => setSelectedSeason(e.target.value)}
+                                className="selection-dropdown"
+                            >
+                                <option value="">Choose season...</option>
+                                {seasons.map(season => (
+                                    <option key={season} value={season}>{season}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="selection-group">
+                            <label>Skin Tone</label>
+                            <select 
+                                value={selectedSkinTone} 
+                                onChange={(e) => setSelectedSkinTone(e.target.value)}
+                                className="selection-dropdown"
+                            >
+                                <option value="">Choose skin tone...</option>
+                                {skinTones.map(tone => (
+                                    <option key={tone} value={tone}>{tone}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="selection-group">
+                            <label>Body Shape</label>
+                            <select 
+                                value={selectedBodyShape} 
+                                onChange={(e) => setSelectedBodyShape(e.target.value)}
+                                className="selection-dropdown"
+                            >
+                                <option value="">Choose body shape...</option>
+                                {bodyShapes.map(shape => (
+                                    <option key={shape} value={shape}>{shape}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="selection-group">
+                            <label>Height</label>
+                            <select 
+                                value={selectedHeight} 
+                                onChange={(e) => setSelectedHeight(e.target.value)}
+                                className="selection-dropdown"
+                            >
+                                <option value="">Choose height...</option>
+                                {heights.map(height => (
+                                    <option key={height} value={height}>{height}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="button-container">
+                        <button 
+                            onClick={generateRecommendations}
+                            className="generate-btn"
+                            disabled={!selectedGender || !selectedStyle || !selectedOccasion || !selectedSeason || !selectedSkinTone || !selectedBodyShape || !selectedHeight}
+                        >
+                            {isLoading ? '🤖 AI Analyzing...' : '🚀 Get Personalized Recommendations'}
+                        </button>
+                        <button onClick={resetSelections} className="reset-btn">
+                            🔄 Reset All Selections
+                        </button>
+                    </div>
+
+                    {isLoading && (
+                        <div className="loading">
+                            <div className="spinner"></div>
+                            <p style={{fontSize: '1.2em', color: '#333', margin: '0'}}>🤖 AI is analyzing your style preferences...</p>
+                            <p style={{fontSize: '1em', color: '#666', margin: '10px 0 0 0'}}>This will only take a moment</p>
+                        </div>
+                    )}
+
+                    {recommendations.length > 0 && !isLoading && (
+                        <div className="recommendations">
+                            <h3>🎯 Your Personalized Fashion Recommendations</h3>
+                            <div className="recommendation-list">
+                                {recommendations.map((rec, index) => (
+                                    <div key={index} className="recommendation-item">
+                                        <div className="recommendation-content">
+                                            <span className="item-number">{index + 1}</span>
+                                            <div className="item-details">
+                                                <span className="item-text">{rec}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            {/* Color Palette Tips */}
+                            {selectedSkinTone && colorPalettes[selectedSkinTone] && (
+                                <div className="tips-section">
+                                    <h4 className="tips-title">🎨 Color Palette for {selectedSkinTone} Skin Tone</h4>
+                                    <div className="tips-grid">
+                                        <div className="tip-card">
+                                            <strong>✨ Best Colors:</strong>
+                                            <div style={{marginTop: '10px'}}>
+                                                {colorPalettes[selectedSkinTone].best.map((color, idx) => (
+                                                    <span key={idx} className="color-tag best">{color}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="tip-card">
+                                            <strong>❌ Avoid:</strong>
+                                            <div style={{marginTop: '10px'}}>
+                                                {colorPalettes[selectedSkinTone].avoid.map((color, idx) => (
+                                                    <span key={idx} className="color-tag avoid">{color}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p style={{color: '#856404', marginTop: '20px', textAlign: 'center', fontStyle: 'italic', fontSize: '1.1em'}}>
+                                        💡 {colorPalettes[selectedSkinTone].description}
+                                    </p>
+                                </div>
+                            )}
+                            
+                            {/* Body Shape Tips */}
+                            {selectedBodyShape && bodyShapeTips[selectedBodyShape] && (
+                                <div className="body-tips-section">
+                                    <h4 className="body-tips-title">📐 Styling Tips for {selectedBodyShape} Body Shape</h4>
+                                    <div className="body-tips-grid">
+                                        <div className="body-tip-card">
+                                            <strong>💡 Key Tips:</strong>
+                                            <ul>
+                                                {bodyShapeTips[selectedBodyShape].tips.map((tip, idx) => (
+                                                    <li key={idx}>{tip}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                        <div className="body-tip-card">
+                                            <strong>✅ Best Styles:</strong>
+                                            <div style={{marginTop: '10px'}}>
+                                                {bodyShapeTips[selectedBodyShape].best.map((style, idx) => (
+                                                    <span key={idx} className="style-tag">{style}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="body-tip-card">
+                                            <strong>❌ Avoid:</strong>
+                                            <div style={{marginTop: '10px'}}>
+                                                {bodyShapeTips[selectedBodyShape].avoid.map((style, idx) => (
+                                                    <span key={idx} className="style-tag" style={{background: '#dc3545'}}>{style}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    <div className="tips-section">
+                        <h4 className="tips-title">💡 Quick Test Combinations</h4>
+                        <div className="tips-grid">
+                            <div className="tip-card" style={{borderColor: '#667eea'}}>
+                                <strong style={{color: '#667eea'}}>👔 Male Professional:</strong><br/>
+                                Male + Casual + Work + Spring<br/>
+                                <small style={{color: '#666'}}>+ Medium + Rectangle + Average</small>
+                            </div>
+                            <div className="tip-card" style={{borderColor: '#e91e63'}}>
+                                <strong style={{color: '#e91e63'}}>👗 Female Casual:</strong><br/>
+                                Female + Casual + Weekend + Summer<br/>
+                                <small style={{color: '#666'}}>+ Light + Hourglass + Petite</small>
+                            </div>
+                            <div className="tip-card" style={{borderColor: '#9c27b0'}}>
+                                <strong style={{color: '#9c27b0'}}>🎭 Non-binary Party:</strong><br/>
+                                Non-binary + Streetwear + Party + Fall<br/>
+                                <small style={{color: '#666'}}>+ Olive + Rectangle + Tall</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SimpleFashionTest />);
+    </script>
+</body>
+</html>

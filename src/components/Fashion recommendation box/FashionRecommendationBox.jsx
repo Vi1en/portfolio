@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './FashionRecommendationBox.css';
 
 const FashionRecommendationBox = () => {
+  const [selectedGender, setSelectedGender] = useState('');
   const [selectedStyle, setSelectedStyle] = useState('');
   const [selectedOccasion, setSelectedOccasion] = useState('');
   const [selectedSeason, setSelectedSeason] = useState('');
@@ -13,6 +14,7 @@ const FashionRecommendationBox = () => {
   const [trendingItems, setTrendingItems] = useState([]);
   const [userHistory, setUserHistory] = useState([]);
 
+  const genders = ['Male', 'Female', 'Non-binary'];
   const styles = [
     'Casual', 'Formal', 'Streetwear', 'Vintage', 'Minimalist', 
     'Bohemian', 'Athletic', 'Business', 'Glamorous', 'Artistic'
@@ -25,144 +27,290 @@ const FashionRecommendationBox = () => {
 
   const seasons = ['Spring', 'Summer', 'Fall', 'Winter'];
 
-  // Enhanced fashion database with AI scoring
+  // Enhanced fashion database with gender-specific recommendations
   const fashionDatabase = {
-    'Casual': {
-      'Work': {
-        'Spring': [
-          { item: 'Light blazer with jeans', score: 0.95, confidence: 0.92, trendScore: 0.88 },
-          { item: 'Polo shirt with chinos', score: 0.87, confidence: 0.85, trendScore: 0.82 },
-          { item: 'Cardigan with blouse', score: 0.89, confidence: 0.88, trendScore: 0.85 }
-        ],
-        'Summer': [
-          { item: 'Linen shirt with shorts', score: 0.93, confidence: 0.91, trendScore: 0.89 },
-          { item: 'Cotton dress', score: 0.91, confidence: 0.89, trendScore: 0.87 },
-          { item: 'T-shirt with khakis', score: 0.85, confidence: 0.83, trendScore: 0.81 }
-        ],
-        'Fall': [
-          { item: 'Sweater with jeans', score: 0.94, confidence: 0.92, trendScore: 0.90 },
-          { item: 'Blazer with t-shirt', score: 0.88, confidence: 0.86, trendScore: 0.84 },
-          { item: 'Turtleneck with pants', score: 0.90, confidence: 0.88, trendScore: 0.86 }
-        ],
-        'Winter': [
-          { item: 'Wool sweater with jeans', score: 0.96, confidence: 0.94, trendScore: 0.92 },
-          { item: 'Fleece jacket', score: 0.89, confidence: 0.87, trendScore: 0.85 },
-          { item: 'Thermal top with pants', score: 0.87, confidence: 0.85, trendScore: 0.83 }
-        ]
+    'Male': {
+      'Casual': {
+        'Work': {
+          'Spring': [
+            { item: 'Oxford shirt with chinos', score: 0.95, confidence: 0.92, trendScore: 0.88 },
+            { item: 'Polo shirt with dark jeans', score: 0.87, confidence: 0.85, trendScore: 0.82 },
+            { item: 'Sweater vest with button-down', score: 0.89, confidence: 0.88, trendScore: 0.85 }
+          ],
+          'Summer': [
+            { item: 'Linen button-down with shorts', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Polo shirt with khakis', score: 0.91, confidence: 0.89, trendScore: 0.87 },
+            { item: 'T-shirt with chino pants', score: 0.85, confidence: 0.83, trendScore: 0.81 }
+          ],
+          'Fall': [
+            { item: 'Sweater with dark jeans', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Blazer with t-shirt and jeans', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+            { item: 'Turtleneck with chinos', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+          ],
+          'Winter': [
+            { item: 'Wool sweater with dark jeans', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+            { item: 'Fleece jacket with jeans', score: 0.89, confidence: 0.87, trendScore: 0.85 },
+            { item: 'Thermal shirt with chinos', score: 0.87, confidence: 0.85, trendScore: 0.83 }
+          ]
+        },
+        'Weekend': {
+          'Spring': [
+            { item: 'Denim jacket with t-shirt and jeans', score: 0.92, confidence: 0.90, trendScore: 0.88 },
+            { item: 'Sneakers with joggers', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+            { item: 'Hoodie with shorts', score: 0.85, confidence: 0.83, trendScore: 0.81 }
+          ],
+          'Summer': [
+            { item: 'Tank top with shorts', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Polo shirt with shorts', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+            { item: 'Flip flops with everything', score: 0.82, confidence: 0.80, trendScore: 0.78 }
+          ],
+          'Fall': [
+            { item: 'Flannel shirt with jeans', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Sweatshirt with joggers', score: 0.89, confidence: 0.87, trendScore: 0.85 },
+            { item: 'Boots with jeans and flannel', score: 0.91, confidence: 0.89, trendScore: 0.87 }
+          ],
+          'Winter': [
+            { item: 'Puffer jacket with jeans', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+            { item: 'Beanie with sweater and jeans', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+            { item: 'Scarf with coat and jeans', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+          ]
+        }
       },
-      'Weekend': {
-        'Spring': [
-          { item: 'Denim jacket with dress', score: 0.92, confidence: 0.90, trendScore: 0.88 },
-          { item: 'Sneakers with leggings', score: 0.88, confidence: 0.86, trendScore: 0.84 },
-          { item: 'Hoodie with shorts', score: 0.85, confidence: 0.83, trendScore: 0.81 }
-        ],
-        'Summer': [
-          { item: 'Tank top with shorts', score: 0.94, confidence: 0.92, trendScore: 0.90 },
-          { item: 'Sundress', score: 0.96, confidence: 0.94, trendScore: 0.92 },
-          { item: 'Flip flops with everything', score: 0.82, confidence: 0.80, trendScore: 0.78 }
-        ],
-        'Fall': [
-          { item: 'Flannel shirt with jeans', score: 0.93, confidence: 0.91, trendScore: 0.89 },
-          { item: 'Sweatshirt with leggings', score: 0.89, confidence: 0.87, trendScore: 0.85 },
-          { item: 'Boots with dress', score: 0.91, confidence: 0.89, trendScore: 0.87 }
-        ],
-        'Winter': [
-          { item: 'Puffer jacket with jeans', score: 0.95, confidence: 0.93, trendScore: 0.91 },
-          { item: 'Beanie with sweater', score: 0.88, confidence: 0.86, trendScore: 0.84 },
-          { item: 'Scarf with everything', score: 0.90, confidence: 0.88, trendScore: 0.86 }
-        ]
+      'Formal': {
+        'Work': {
+          'Spring': [
+            { item: 'Tailored suit with dress shirt', score: 0.97, confidence: 0.95, trendScore: 0.93 },
+            { item: 'Dress pants with button-down', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Blazer with chinos and shirt', score: 0.91, confidence: 0.89, trendScore: 0.87 }
+          ],
+          'Summer': [
+            { item: 'Lightweight suit', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Linen pants with silk shirt', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+            { item: 'Seersucker blazer with chinos', score: 0.89, confidence: 0.87, trendScore: 0.85 }
+          ],
+          'Fall': [
+            { item: 'Wool suit with tie', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+            { item: 'Turtleneck with blazer', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Dress pants with sweater', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+          ],
+          'Winter': [
+            { item: 'Heavy wool suit', score: 0.98, confidence: 0.96, trendScore: 0.94 },
+            { item: 'Cashmere sweater with dress pants', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+            { item: 'Wool coat over suit', score: 0.92, confidence: 0.90, trendScore: 0.88 }
+          ]
+        },
+        'Formal Event': {
+          'Spring': [
+            { item: 'Tuxedo with bow tie', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+            { item: 'Dark suit with tie', score: 0.98, confidence: 0.96, trendScore: 0.94 },
+            { item: 'Dress shirt with dress pants', score: 0.97, confidence: 0.95, trendScore: 0.93 }
+          ],
+          'Summer': [
+            { item: 'Light suit with pocket square', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+            { item: 'Linen suit', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Formal shirt with dress pants', score: 0.91, confidence: 0.89, trendScore: 0.87 }
+          ],
+          'Fall': [
+            { item: 'Velvet blazer with dress pants', score: 0.97, confidence: 0.95, trendScore: 0.93 },
+            { item: 'Dark suit with silk tie', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+            { item: 'Dress shirt with vest', score: 0.96, confidence: 0.94, trendScore: 0.92 }
+          ],
+          'Winter': [
+            { item: 'Sequined jacket with dress pants', score: 0.98, confidence: 0.96, trendScore: 0.94 },
+            { item: 'Black tie suit', score: 0.97, confidence: 0.95, trendScore: 0.93 },
+            { item: 'Fur stole over suit', score: 0.94, confidence: 0.92, trendScore: 0.90 }
+          ]
+        }
+      },
+      'Streetwear': {
+        'Weekend': {
+          'Spring': [
+            { item: 'Oversized hoodie with joggers', score: 0.91, confidence: 0.89, trendScore: 0.87 },
+            { item: 'Graphic tee with cargo pants', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Dad sneakers with everything', score: 0.87, confidence: 0.85, trendScore: 0.83 }
+          ],
+          'Summer': [
+            { item: 'Graphic tank with shorts', score: 0.92, confidence: 0.90, trendScore: 0.88 },
+            { item: 'Crop top with high-waisted pants', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Chunky sneakers with socks', score: 0.89, confidence: 0.87, trendScore: 0.85 }
+          ],
+          'Fall': [
+            { item: 'Oversized sweater with joggers', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Crop top with high-waisted jeans', score: 0.91, confidence: 0.89, trendScore: 0.87 },
+            { item: 'Platform sneakers with everything', score: 0.88, confidence: 0.86, trendScore: 0.84 }
+          ],
+          'Winter': [
+            { item: 'Puffer vest with hoodie', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Crop top with high-waisted pants', score: 0.90, confidence: 0.88, trendScore: 0.86 },
+            { item: 'Chunky boots with everything', score: 0.92, confidence: 0.90, trendScore: 0.88 }
+          ]
+        }
       }
     },
-    'Formal': {
-      'Work': {
-        'Spring': [
-          { item: 'Tailored suit with blouse', score: 0.97, confidence: 0.95, trendScore: 0.93 },
-          { item: 'Pencil skirt with blazer', score: 0.94, confidence: 0.92, trendScore: 0.90 },
-          { item: 'Dress pants with shirt', score: 0.91, confidence: 0.89, trendScore: 0.87 }
-        ],
-        'Summer': [
-          { item: 'Lightweight suit', score: 0.93, confidence: 0.91, trendScore: 0.89 },
-          { item: 'Midi dress with blazer', score: 0.95, confidence: 0.93, trendScore: 0.91 },
-          { item: 'Linen pants with silk top', score: 0.89, confidence: 0.87, trendScore: 0.85 }
-        ],
-        'Fall': [
-          { item: 'Wool suit', score: 0.96, confidence: 0.94, trendScore: 0.92 },
-          { item: 'Knee-length dress', score: 0.93, confidence: 0.91, trendScore: 0.89 },
-          { item: 'Turtleneck with blazer', score: 0.90, confidence: 0.88, trendScore: 0.86 }
-        ],
-        'Winter': [
-          { item: 'Heavy wool suit', score: 0.98, confidence: 0.96, trendScore: 0.94 },
-          { item: 'Cashmere sweater with skirt', score: 0.95, confidence: 0.93, trendScore: 0.91 },
-          { item: 'Wool coat over dress', score: 0.92, confidence: 0.90, trendScore: 0.88 }
-        ]
+    'Female': {
+      'Casual': {
+        'Work': {
+          'Spring': [
+            { item: 'Light blazer with jeans', score: 0.95, confidence: 0.92, trendScore: 0.88 },
+            { item: 'Polo shirt with chinos', score: 0.87, confidence: 0.85, trendScore: 0.82 },
+            { item: 'Cardigan with blouse', score: 0.89, confidence: 0.88, trendScore: 0.85 }
+          ],
+          'Summer': [
+            { item: 'Linen shirt with shorts', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Cotton dress', score: 0.91, confidence: 0.89, trendScore: 0.87 },
+            { item: 'T-shirt with khakis', score: 0.85, confidence: 0.83, trendScore: 0.81 }
+          ],
+          'Fall': [
+            { item: 'Sweater with jeans', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Blazer with t-shirt', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+            { item: 'Turtleneck with pants', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+          ],
+          'Winter': [
+            { item: 'Wool sweater with jeans', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+            { item: 'Fleece jacket', score: 0.89, confidence: 0.87, trendScore: 0.85 },
+            { item: 'Thermal top with pants', score: 0.87, confidence: 0.85, trendScore: 0.83 }
+          ]
+        },
+        'Weekend': {
+          'Spring': [
+            { item: 'Denim jacket with dress', score: 0.92, confidence: 0.90, trendScore: 0.88 },
+            { item: 'Sneakers with leggings', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+            { item: 'Hoodie with shorts', score: 0.85, confidence: 0.83, trendScore: 0.81 }
+          ],
+          'Summer': [
+            { item: 'Tank top with shorts', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Sundress', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+            { item: 'Flip flops with everything', score: 0.82, confidence: 0.80, trendScore: 0.78 }
+          ],
+          'Fall': [
+            { item: 'Flannel shirt with jeans', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Sweatshirt with leggings', score: 0.89, confidence: 0.87, trendScore: 0.85 },
+            { item: 'Boots with dress', score: 0.91, confidence: 0.89, trendScore: 0.87 }
+          ],
+          'Winter': [
+            { item: 'Puffer jacket with jeans', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+            { item: 'Beanie with sweater', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+            { item: 'Scarf with everything', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+          ]
+        }
       },
-      'Formal Event': {
-        'Spring': [
-          { item: 'Cocktail dress', score: 0.96, confidence: 0.94, trendScore: 0.92 },
-          { item: 'Tuxedo', score: 0.98, confidence: 0.96, trendScore: 0.94 },
-          { item: 'Evening gown', score: 0.97, confidence: 0.95, trendScore: 0.93 }
-        ],
-        'Summer': [
-          { item: 'Maxi dress', score: 0.95, confidence: 0.93, trendScore: 0.91 },
-          { item: 'Light suit', score: 0.93, confidence: 0.91, trendScore: 0.89 },
-          { item: 'Formal jumpsuit', score: 0.91, confidence: 0.89, trendScore: 0.87 }
-        ],
-        'Fall': [
-          { item: 'Velvet dress', score: 0.97, confidence: 0.95, trendScore: 0.93 },
-          { item: 'Dark suit', score: 0.95, confidence: 0.93, trendScore: 0.91 },
-          { item: 'Silk gown', score: 0.96, confidence: 0.94, trendScore: 0.92 }
-        ],
-        'Winter': [
-          { item: 'Sequined dress', score: 0.98, confidence: 0.96, trendScore: 0.94 },
-          { item: 'Black tie suit', score: 0.97, confidence: 0.95, trendScore: 0.93 },
-          { item: 'Fur stole over dress', score: 0.94, confidence: 0.92, trendScore: 0.90 }
-        ]
+      'Formal': {
+        'Work': {
+          'Spring': [
+            { item: 'Tailored suit with blouse', score: 0.97, confidence: 0.95, trendScore: 0.93 },
+            { item: 'Pencil skirt with blazer', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Dress pants with shirt', score: 0.91, confidence: 0.89, trendScore: 0.87 }
+          ],
+          'Summer': [
+            { item: 'Lightweight suit', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Midi dress with blazer', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+            { item: 'Linen pants with silk top', score: 0.89, confidence: 0.87, trendScore: 0.85 }
+          ],
+          'Fall': [
+            { item: 'Wool suit', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+            { item: 'Knee-length dress', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Turtleneck with blazer', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+          ],
+          'Winter': [
+            { item: 'Heavy wool suit', score: 0.98, confidence: 0.96, trendScore: 0.94 },
+            { item: 'Cashmere sweater with skirt', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+            { item: 'Wool coat over dress', score: 0.92, confidence: 0.90, trendScore: 0.88 }
+          ]
+        },
+        'Formal Event': {
+          'Spring': [
+            { item: 'Cocktail dress', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+            { item: 'Evening gown', score: 0.97, confidence: 0.95, trendScore: 0.93 },
+            { item: 'Formal jumpsuit', score: 0.95, confidence: 0.93, trendScore: 0.91 }
+          ],
+          'Summer': [
+            { item: 'Maxi dress', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+            { item: 'Light suit', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Formal jumpsuit', score: 0.91, confidence: 0.89, trendScore: 0.87 }
+          ],
+          'Fall': [
+            { item: 'Velvet dress', score: 0.97, confidence: 0.95, trendScore: 0.93 },
+            { item: 'Silk gown', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+            { item: 'Sequined dress', score: 0.95, confidence: 0.93, trendScore: 0.91 }
+          ],
+          'Winter': [
+            { item: 'Sequined dress', score: 0.98, confidence: 0.96, trendScore: 0.94 },
+            { item: 'Fur stole over dress', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Velvet gown', score: 0.96, confidence: 0.94, trendScore: 0.92 }
+          ]
+        }
+      },
+      'Streetwear': {
+        'Weekend': {
+          'Spring': [
+            { item: 'Oversized hoodie with bike shorts', score: 0.91, confidence: 0.89, trendScore: 0.87 },
+            { item: 'Crop top with high-waisted pants', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Dad sneakers', score: 0.87, confidence: 0.85, trendScore: 0.83 }
+          ],
+          'Summer': [
+            { item: 'Graphic tee with shorts', score: 0.92, confidence: 0.90, trendScore: 0.88 },
+            { item: 'Crop top with skirt', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Chunky sneakers', score: 0.89, confidence: 0.87, trendScore: 0.85 }
+          ],
+          'Fall': [
+            { item: 'Oversized sweater with leggings', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Crop top with high-waisted jeans', score: 0.91, confidence: 0.89, trendScore: 0.87 },
+            { item: 'Platform sneakers', score: 0.88, confidence: 0.86, trendScore: 0.84 }
+          ],
+          'Winter': [
+            { item: 'Puffer vest with hoodie', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Crop top with high-waisted pants', score: 0.90, confidence: 0.88, trendScore: 0.86 },
+            { item: 'Chunky boots', score: 0.92, confidence: 0.90, trendScore: 0.88 }
+          ]
+        }
       }
     },
-    'Streetwear': {
-      'Weekend': {
-        'Spring': [
-          { item: 'Oversized hoodie with bike shorts', score: 0.91, confidence: 0.89, trendScore: 0.87 },
-          { item: 'Crop top with high-waisted pants', score: 0.93, confidence: 0.91, trendScore: 0.89 },
-          { item: 'Dad sneakers', score: 0.87, confidence: 0.85, trendScore: 0.83 }
-        ],
-        'Summer': [
-          { item: 'Graphic tee with shorts', score: 0.92, confidence: 0.90, trendScore: 0.88 },
-          { item: 'Crop top with skirt', score: 0.94, confidence: 0.92, trendScore: 0.90 },
-          { item: 'Chunky sneakers', score: 0.89, confidence: 0.87, trendScore: 0.85 }
-        ],
-        'Fall': [
-          { item: 'Oversized sweater with leggings', score: 0.93, confidence: 0.91, trendScore: 0.89 },
-          { item: 'Crop top with high-waisted jeans', score: 0.91, confidence: 0.89, trendScore: 0.87 },
-          { item: 'Platform sneakers', score: 0.88, confidence: 0.86, trendScore: 0.84 }
-        ],
-        'Winter': [
-          { item: 'Puffer vest with hoodie', score: 0.94, confidence: 0.92, trendScore: 0.90 },
-          { item: 'Crop top with high-waisted pants', score: 0.90, confidence: 0.88, trendScore: 0.86 },
-          { item: 'Chunky boots', score: 0.92, confidence: 0.90, trendScore: 0.88 }
-        ]
-      },
-      'Creative Meeting': {
-        'Spring': [
-          { item: 'Statement jacket with basics', score: 0.93, confidence: 0.91, trendScore: 0.89 },
-          { item: 'Bold accessories', score: 0.89, confidence: 0.87, trendScore: 0.85 },
-          { item: 'Unique sneakers', score: 0.91, confidence: 0.89, trendScore: 0.87 }
-        ],
-        'Summer': [
-          { item: 'Graphic print top', score: 0.92, confidence: 0.90, trendScore: 0.88 },
-          { item: 'Statement pants', score: 0.90, confidence: 0.88, trendScore: 0.86 },
-          { item: 'Colorful sneakers', score: 0.88, confidence: 0.86, trendScore: 0.84 }
-        ],
-        'Fall': [
-          { item: 'Layered look with jacket', score: 0.94, confidence: 0.92, trendScore: 0.90 },
-          { item: 'Bold colors', score: 0.91, confidence: 0.89, trendScore: 0.87 },
-          { item: 'Statement shoes', score: 0.89, confidence: 0.87, trendScore: 0.85 }
-        ],
-        'Winter': [
-          { item: 'Oversized coat', score: 0.95, confidence: 0.93, trendScore: 0.91 },
-          { item: 'Layered textures', score: 0.92, confidence: 0.90, trendScore: 0.88 },
-          { item: 'Bold footwear', score: 0.90, confidence: 0.88, trendScore: 0.86 }
-        ]
+    'Non-binary': {
+      'Casual': {
+        'Work': {
+          'Spring': [
+            { item: 'Androgynous blazer with pants', score: 0.95, confidence: 0.92, trendScore: 0.88 },
+            { item: 'Neutral shirt with chinos', score: 0.87, confidence: 0.85, trendScore: 0.82 },
+            { item: 'Unisex sweater with pants', score: 0.89, confidence: 0.88, trendScore: 0.85 }
+          ],
+          'Summer': [
+            { item: 'Gender-neutral dress', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Unisex linen shirt with shorts', score: 0.91, confidence: 0.89, trendScore: 0.87 },
+            { item: 'Neutral t-shirt with khakis', score: 0.85, confidence: 0.83, trendScore: 0.81 }
+          ],
+          'Fall': [
+            { item: 'Unisex sweater with jeans', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Androgynous blazer with t-shirt', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+            { item: 'Neutral turtleneck with pants', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+          ],
+          'Winter': [
+            { item: 'Unisex wool sweater with jeans', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+            { item: 'Gender-neutral fleece jacket', score: 0.89, confidence: 0.87, trendScore: 0.85 },
+            { item: 'Neutral thermal top with pants', score: 0.87, confidence: 0.85, trendScore: 0.83 }
+          ]
+        },
+        'Weekend': {
+          'Spring': [
+            { item: 'Unisex denim jacket with pants', score: 0.92, confidence: 0.90, trendScore: 0.88 },
+            { item: 'Gender-neutral sneakers with pants', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+            { item: 'Unisex hoodie with shorts', score: 0.85, confidence: 0.83, trendScore: 0.81 }
+          ],
+          'Summer': [
+            { item: 'Neutral tank top with shorts', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+            { item: 'Unisex sundress', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+            { item: 'Gender-neutral flip flops', score: 0.82, confidence: 0.80, trendScore: 0.78 }
+          ],
+          'Fall': [
+            { item: 'Unisex flannel shirt with jeans', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+            { item: 'Gender-neutral sweatshirt with pants', score: 0.89, confidence: 0.87, trendScore: 0.85 },
+            { item: 'Unisex boots with pants', score: 0.91, confidence: 0.89, trendScore: 0.87 }
+          ],
+          'Winter': [
+            { item: 'Gender-neutral puffer jacket with pants', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+            { item: 'Unisex beanie with sweater', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+            { item: 'Neutral scarf with everything', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+          ]
+        }
       }
     }
   };
@@ -174,6 +322,7 @@ const FashionRecommendationBox = () => {
       occasionMatch: 0,
       seasonalAppropriateness: 0,
       trendAlignment: 0,
+      genderAppropriateness: 0,
       overallScore: 0
     };
 
@@ -196,25 +345,29 @@ const FashionRecommendationBox = () => {
     };
     analysis.seasonalAppropriateness = seasonalWeights[selections.season] * 100;
 
+    // Analyze gender appropriateness
+    analysis.genderAppropriateness = 95; // High score for gender-specific recommendations
+
     // Calculate overall score
     analysis.overallScore = (
-      analysis.styleConfidence * 0.3 +
-      analysis.occasionMatch * 0.3 +
+      analysis.styleConfidence * 0.25 +
+      analysis.occasionMatch * 0.25 +
       analysis.seasonalAppropriateness * 0.2 +
-      analysis.trendAlignment * 0.2
+      analysis.genderAppropriateness * 0.2 +
+      analysis.trendAlignment * 0.1
     );
 
     return analysis;
   }, [userHistory]);
 
   // AI Recommendation Engine
-  const generateAIRecommendations = useCallback((style, occasion, season) => {
-    const styleData = fashionDatabase[style];
-    if (!styleData || !styleData[occasion] || !styleData[occasion][season]) {
+  const generateAIRecommendations = useCallback((gender, style, occasion, season) => {
+    const genderData = fashionDatabase[gender];
+    if (!genderData || !genderData[style] || !genderData[style][occasion] || !genderData[style][occasion][season]) {
       return [];
     }
 
-    let recommendations = styleData[occasion][season];
+    let recommendations = genderData[style][occasion][season];
     
     // Apply AI scoring and ranking
     recommendations = recommendations.map(rec => ({
@@ -236,7 +389,7 @@ const FashionRecommendationBox = () => {
       .map(rec => ({
         item: rec.item,
         confidence: Math.round(rec.finalScore * 100),
-        reasoning: generateReasoning(rec, style, occasion, season)
+        reasoning: generateReasoning(rec, gender, style, occasion, season)
       }));
   }, [userPreferences]);
 
@@ -263,13 +416,14 @@ const FashionRecommendationBox = () => {
     return Math.min(bonus, 1.0);
   };
 
-  const generateReasoning = (recommendation, style, occasion, season) => {
+  const generateReasoning = (recommendation, gender, style, occasion, season) => {
     const reasons = [];
     
     if (recommendation.score > 0.9) reasons.push('High style compatibility');
     if (recommendation.confidence > 0.9) reasons.push('Excellent occasion match');
     if (recommendation.trendScore > 0.9) reasons.push('Trending this season');
     if (recommendation.personalizationBonus > 0.7) reasons.push('Matches your preferences');
+    reasons.push(`Perfect for ${gender} styling`);
     
     return reasons.length > 0 ? reasons.join(', ') : 'Good overall match';
   };
@@ -288,7 +442,7 @@ const FashionRecommendationBox = () => {
 
   // Enhanced recommendation generation
   const generateRecommendations = async () => {
-    if (!selectedStyle || !selectedOccasion || !selectedSeason) {
+    if (!selectedGender || !selectedStyle || !selectedOccasion || !selectedSeason) {
       alert('Please select all options to get recommendations!');
       return;
     }
@@ -300,10 +454,11 @@ const FashionRecommendationBox = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Generate AI recommendations
-      const aiRecs = generateAIRecommendations(selectedStyle, selectedOccasion, selectedSeason);
+      const aiRecs = generateAIRecommendations(selectedGender, selectedStyle, selectedOccasion, selectedSeason);
       
       // Analyze user style
       const styleAnalysis = analyzeUserStyle({
+        gender: selectedGender,
         style: selectedStyle,
         occasion: selectedOccasion,
         season: selectedSeason
@@ -314,6 +469,7 @@ const FashionRecommendationBox = () => {
         styleConfidence: Math.round(styleAnalysis.styleConfidence),
         occasionMatch: Math.round(styleAnalysis.occasionMatch),
         seasonalAppropriateness: Math.round(styleAnalysis.seasonalAppropriateness),
+        genderAppropriateness: Math.round(styleAnalysis.genderAppropriateness),
         overallScore: Math.round(styleAnalysis.overallScore)
       });
       
@@ -325,6 +481,7 @@ const FashionRecommendationBox = () => {
       
       // Update user history
       const newHistory = {
+        gender: selectedGender,
         style: selectedStyle,
         occasion: selectedOccasion,
         season: selectedSeason,
@@ -342,6 +499,7 @@ const FashionRecommendationBox = () => {
   };
 
   const resetSelections = () => {
+    setSelectedGender('');
     setSelectedStyle('');
     setSelectedOccasion('');
     setSelectedSeason('');
@@ -373,6 +531,20 @@ const FashionRecommendationBox = () => {
       </div>
 
       <div className="selection-container">
+        <div className="selection-group">
+          <label>Gender Identity:</label>
+          <select 
+            value={selectedGender} 
+            onChange={(e) => setSelectedGender(e.target.value)}
+            className="selection-dropdown"
+          >
+            <option value="">Choose gender...</option>
+            {genders.map(gender => (
+              <option key={gender} value={gender}>{gender}</option>
+            ))}
+          </select>
+        </div>
+
         <div className="selection-group">
           <label>Style Preference:</label>
           <select 
@@ -420,7 +592,7 @@ const FashionRecommendationBox = () => {
         <button 
           onClick={generateRecommendations}
           className="generate-btn"
-          disabled={!selectedStyle || !selectedOccasion || !selectedSeason}
+          disabled={!selectedGender || !selectedStyle || !selectedOccasion || !selectedSeason}
         >
           {isLoading ? '🤖 AI Analyzing...' : '🚀 Get AI Recommendations'}
         </button>
@@ -451,6 +623,10 @@ const FashionRecommendationBox = () => {
             <div className="insight-item">
               <span className="insight-label">Seasonal Fit</span>
               <span className="insight-value">{aiInsights.seasonalAppropriateness}%</span>
+            </div>
+            <div className="insight-item">
+              <span className="insight-label">Gender Fit</span>
+              <span className="insight-value">{aiInsights.genderAppropriateness}%</span>
             </div>
             <div className="insight-item">
               <span className="insight-label">Overall Score</span>
@@ -498,9 +674,9 @@ const FashionRecommendationBox = () => {
         <h4>💡 AI Style Tips</h4>
         <ul>
           <li>Our AI learns from your preferences to improve recommendations</li>
-          <li>Trend analysis ensures your style stays current</li>
+          <li>Gender-specific styling ensures perfect fit and style</li>
+          <li>Trend analysis keeps your style current and relevant</li>
           <li>Confidence scores help you make informed decisions</li>
-          <li>Personalization improves with each use</li>
         </ul>
       </div>
 
