@@ -138,7 +138,7 @@ export const AboutWindow: React.FC<AboutWindowProps> = ({ onClose }) => {
                       <h4 className="font-medium text-blue-400">AI/ML Project Developer</h4>
                       <p className="text-xs text-muted-foreground">Personal Projects • 2023-Present</p>
                       <ul className="text-sm mt-1 space-y-1">
-                        <li>• <strong>Medical Symptom Diagnoser:</strong> Built an AI-powered system for preliminary medical symptom analysis</li>
+                        <li>• <strong>Multiple Disease Prediction System:</strong> Built a comprehensive healthcare AI app that predicts Diabetes, Heart Disease, and Parkinson's using ML models</li>
                         <li>• <strong>Fashion Recommendation Box:</strong> Developed AI/ML-based fashion recommendation system</li>
                       </ul>
                     </div>

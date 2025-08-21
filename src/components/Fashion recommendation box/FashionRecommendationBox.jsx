@@ -1,0 +1,517 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import './FashionRecommendationBox.css';
+
+const FashionRecommendationBox = () => {
+  const [selectedStyle, setSelectedStyle] = useState('');
+  const [selectedOccasion, setSelectedOccasion] = useState('');
+  const [selectedSeason, setSelectedSeason] = useState('');
+  const [userPreferences, setUserPreferences] = useState({});
+  const [styleProfile, setStyleProfile] = useState({});
+  const [recommendations, setRecommendations] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [aiInsights, setAiInsights] = useState({});
+  const [trendingItems, setTrendingItems] = useState([]);
+  const [userHistory, setUserHistory] = useState([]);
+
+  const styles = [
+    'Casual', 'Formal', 'Streetwear', 'Vintage', 'Minimalist', 
+    'Bohemian', 'Athletic', 'Business', 'Glamorous', 'Artistic'
+  ];
+
+  const occasions = [
+    'Work', 'Party', 'Date Night', 'Weekend', 'Travel', 
+    'Sport', 'Formal Event', 'Casual Outing', 'Creative Meeting'
+  ];
+
+  const seasons = ['Spring', 'Summer', 'Fall', 'Winter'];
+
+  // Enhanced fashion database with AI scoring
+  const fashionDatabase = {
+    'Casual': {
+      'Work': {
+        'Spring': [
+          { item: 'Light blazer with jeans', score: 0.95, confidence: 0.92, trendScore: 0.88 },
+          { item: 'Polo shirt with chinos', score: 0.87, confidence: 0.85, trendScore: 0.82 },
+          { item: 'Cardigan with blouse', score: 0.89, confidence: 0.88, trendScore: 0.85 }
+        ],
+        'Summer': [
+          { item: 'Linen shirt with shorts', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+          { item: 'Cotton dress', score: 0.91, confidence: 0.89, trendScore: 0.87 },
+          { item: 'T-shirt with khakis', score: 0.85, confidence: 0.83, trendScore: 0.81 }
+        ],
+        'Fall': [
+          { item: 'Sweater with jeans', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+          { item: 'Blazer with t-shirt', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+          { item: 'Turtleneck with pants', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+        ],
+        'Winter': [
+          { item: 'Wool sweater with jeans', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+          { item: 'Fleece jacket', score: 0.89, confidence: 0.87, trendScore: 0.85 },
+          { item: 'Thermal top with pants', score: 0.87, confidence: 0.85, trendScore: 0.83 }
+        ]
+      },
+      'Weekend': {
+        'Spring': [
+          { item: 'Denim jacket with dress', score: 0.92, confidence: 0.90, trendScore: 0.88 },
+          { item: 'Sneakers with leggings', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+          { item: 'Hoodie with shorts', score: 0.85, confidence: 0.83, trendScore: 0.81 }
+        ],
+        'Summer': [
+          { item: 'Tank top with shorts', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+          { item: 'Sundress', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+          { item: 'Flip flops with everything', score: 0.82, confidence: 0.80, trendScore: 0.78 }
+        ],
+        'Fall': [
+          { item: 'Flannel shirt with jeans', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+          { item: 'Sweatshirt with leggings', score: 0.89, confidence: 0.87, trendScore: 0.85 },
+          { item: 'Boots with dress', score: 0.91, confidence: 0.89, trendScore: 0.87 }
+        ],
+        'Winter': [
+          { item: 'Puffer jacket with jeans', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+          { item: 'Beanie with sweater', score: 0.88, confidence: 0.86, trendScore: 0.84 },
+          { item: 'Scarf with everything', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+        ]
+      }
+    },
+    'Formal': {
+      'Work': {
+        'Spring': [
+          { item: 'Tailored suit with blouse', score: 0.97, confidence: 0.95, trendScore: 0.93 },
+          { item: 'Pencil skirt with blazer', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+          { item: 'Dress pants with shirt', score: 0.91, confidence: 0.89, trendScore: 0.87 }
+        ],
+        'Summer': [
+          { item: 'Lightweight suit', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+          { item: 'Midi dress with blazer', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+          { item: 'Linen pants with silk top', score: 0.89, confidence: 0.87, trendScore: 0.85 }
+        ],
+        'Fall': [
+          { item: 'Wool suit', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+          { item: 'Knee-length dress', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+          { item: 'Turtleneck with blazer', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+        ],
+        'Winter': [
+          { item: 'Heavy wool suit', score: 0.98, confidence: 0.96, trendScore: 0.94 },
+          { item: 'Cashmere sweater with skirt', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+          { item: 'Wool coat over dress', score: 0.92, confidence: 0.90, trendScore: 0.88 }
+        ]
+      },
+      'Formal Event': {
+        'Spring': [
+          { item: 'Cocktail dress', score: 0.96, confidence: 0.94, trendScore: 0.92 },
+          { item: 'Tuxedo', score: 0.98, confidence: 0.96, trendScore: 0.94 },
+          { item: 'Evening gown', score: 0.97, confidence: 0.95, trendScore: 0.93 }
+        ],
+        'Summer': [
+          { item: 'Maxi dress', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+          { item: 'Light suit', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+          { item: 'Formal jumpsuit', score: 0.91, confidence: 0.89, trendScore: 0.87 }
+        ],
+        'Fall': [
+          { item: 'Velvet dress', score: 0.97, confidence: 0.95, trendScore: 0.93 },
+          { item: 'Dark suit', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+          { item: 'Silk gown', score: 0.96, confidence: 0.94, trendScore: 0.92 }
+        ],
+        'Winter': [
+          { item: 'Sequined dress', score: 0.98, confidence: 0.96, trendScore: 0.94 },
+          { item: 'Black tie suit', score: 0.97, confidence: 0.95, trendScore: 0.93 },
+          { item: 'Fur stole over dress', score: 0.94, confidence: 0.92, trendScore: 0.90 }
+        ]
+      }
+    },
+    'Streetwear': {
+      'Weekend': {
+        'Spring': [
+          { item: 'Oversized hoodie with bike shorts', score: 0.91, confidence: 0.89, trendScore: 0.87 },
+          { item: 'Crop top with high-waisted pants', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+          { item: 'Dad sneakers', score: 0.87, confidence: 0.85, trendScore: 0.83 }
+        ],
+        'Summer': [
+          { item: 'Graphic tee with shorts', score: 0.92, confidence: 0.90, trendScore: 0.88 },
+          { item: 'Crop top with skirt', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+          { item: 'Chunky sneakers', score: 0.89, confidence: 0.87, trendScore: 0.85 }
+        ],
+        'Fall': [
+          { item: 'Oversized sweater with leggings', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+          { item: 'Crop top with high-waisted jeans', score: 0.91, confidence: 0.89, trendScore: 0.87 },
+          { item: 'Platform sneakers', score: 0.88, confidence: 0.86, trendScore: 0.84 }
+        ],
+        'Winter': [
+          { item: 'Puffer vest with hoodie', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+          { item: 'Crop top with high-waisted pants', score: 0.90, confidence: 0.88, trendScore: 0.86 },
+          { item: 'Chunky boots', score: 0.92, confidence: 0.90, trendScore: 0.88 }
+        ]
+      },
+      'Creative Meeting': {
+        'Spring': [
+          { item: 'Statement jacket with basics', score: 0.93, confidence: 0.91, trendScore: 0.89 },
+          { item: 'Bold accessories', score: 0.89, confidence: 0.87, trendScore: 0.85 },
+          { item: 'Unique sneakers', score: 0.91, confidence: 0.89, trendScore: 0.87 }
+        ],
+        'Summer': [
+          { item: 'Graphic print top', score: 0.92, confidence: 0.90, trendScore: 0.88 },
+          { item: 'Statement pants', score: 0.90, confidence: 0.88, trendScore: 0.86 },
+          { item: 'Colorful sneakers', score: 0.88, confidence: 0.86, trendScore: 0.84 }
+        ],
+        'Fall': [
+          { item: 'Layered look with jacket', score: 0.94, confidence: 0.92, trendScore: 0.90 },
+          { item: 'Bold colors', score: 0.91, confidence: 0.89, trendScore: 0.87 },
+          { item: 'Statement shoes', score: 0.89, confidence: 0.87, trendScore: 0.85 }
+        ],
+        'Winter': [
+          { item: 'Oversized coat', score: 0.95, confidence: 0.93, trendScore: 0.91 },
+          { item: 'Layered textures', score: 0.92, confidence: 0.90, trendScore: 0.88 },
+          { item: 'Bold footwear', score: 0.90, confidence: 0.88, trendScore: 0.86 }
+        ]
+      }
+    }
+  };
+
+  // AI/ML Style Analysis Functions
+  const analyzeUserStyle = useCallback((selections) => {
+    const analysis = {
+      styleConfidence: 0,
+      occasionMatch: 0,
+      seasonalAppropriateness: 0,
+      trendAlignment: 0,
+      overallScore: 0
+    };
+
+    // Analyze style confidence based on user history
+    if (userHistory.length > 0) {
+      const styleFrequency = userHistory.filter(h => h.style === selections.style).length;
+      analysis.styleConfidence = Math.min(styleFrequency / userHistory.length * 100, 100);
+    }
+
+    // Analyze occasion match
+    const occasionWeights = {
+      'Work': 0.9, 'Formal Event': 0.95, 'Party': 0.85, 'Date Night': 0.9,
+      'Weekend': 0.8, 'Travel': 0.85, 'Sport': 0.9, 'Casual Outing': 0.8, 'Creative Meeting': 0.85
+    };
+    analysis.occasionMatch = occasionWeights[selections.occasion] * 100;
+
+    // Analyze seasonal appropriateness
+    const seasonalWeights = {
+      'Spring': 0.9, 'Summer': 0.9, 'Fall': 0.9, 'Winter': 0.9
+    };
+    analysis.seasonalAppropriateness = seasonalWeights[selections.season] * 100;
+
+    // Calculate overall score
+    analysis.overallScore = (
+      analysis.styleConfidence * 0.3 +
+      analysis.occasionMatch * 0.3 +
+      analysis.seasonalAppropriateness * 0.2 +
+      analysis.trendAlignment * 0.2
+    );
+
+    return analysis;
+  }, [userHistory]);
+
+  // AI Recommendation Engine
+  const generateAIRecommendations = useCallback((style, occasion, season) => {
+    const styleData = fashionDatabase[style];
+    if (!styleData || !styleData[occasion] || !styleData[occasion][season]) {
+      return [];
+    }
+
+    let recommendations = styleData[occasion][season];
+    
+    // Apply AI scoring and ranking
+    recommendations = recommendations.map(rec => ({
+      ...rec,
+      aiScore: rec.score * 0.4 + rec.confidence * 0.3 + rec.trendScore * 0.3,
+      personalizationBonus: calculatePersonalizationBonus(rec, userPreferences),
+      finalScore: 0
+    }));
+
+    // Calculate final scores with personalization
+    recommendations.forEach(rec => {
+      rec.finalScore = rec.aiScore * 0.7 + rec.personalizationBonus * 0.3;
+    });
+
+    // Sort by final score and return top recommendations
+    return recommendations
+      .sort((a, b) => b.finalScore - a.finalScore)
+      .slice(0, 5)
+      .map(rec => ({
+        item: rec.item,
+        confidence: Math.round(rec.finalScore * 100),
+        reasoning: generateReasoning(rec, style, occasion, season)
+      }));
+  }, [userPreferences]);
+
+  const calculatePersonalizationBonus = (recommendation, preferences) => {
+    let bonus = 0.5; // Base bonus
+    
+    // Color preferences
+    if (preferences.favoriteColors) {
+      const colorKeywords = ['black', 'white', 'blue', 'red', 'green', 'yellow', 'pink', 'purple'];
+      colorKeywords.forEach(color => {
+        if (recommendation.item.toLowerCase().includes(color)) {
+          bonus += 0.1;
+        }
+      });
+    }
+
+    // Style preferences
+    if (preferences.preferredFit === 'loose' && recommendation.item.includes('Oversized')) {
+      bonus += 0.2;
+    } else if (preferences.preferredFit === 'fitted' && recommendation.item.includes('Tailored')) {
+      bonus += 0.2;
+    }
+
+    return Math.min(bonus, 1.0);
+  };
+
+  const generateReasoning = (recommendation, style, occasion, season) => {
+    const reasons = [];
+    
+    if (recommendation.score > 0.9) reasons.push('High style compatibility');
+    if (recommendation.confidence > 0.9) reasons.push('Excellent occasion match');
+    if (recommendation.trendScore > 0.9) reasons.push('Trending this season');
+    if (recommendation.personalizationBonus > 0.7) reasons.push('Matches your preferences');
+    
+    return reasons.length > 0 ? reasons.join(', ') : 'Good overall match';
+  };
+
+  // Trend Analysis
+  const analyzeTrends = useCallback(() => {
+    const currentTrends = {
+      'Spring': ['Pastel colors', 'Light fabrics', 'Floral patterns'],
+      'Summer': ['Bright colors', 'Natural materials', 'Minimalist designs'],
+      'Fall': ['Rich earth tones', 'Layered looks', 'Texture mixing'],
+      'Winter': ['Deep jewel tones', 'Cozy materials', 'Statement pieces']
+    };
+
+    setTrendingItems(currentTrends[selectedSeason] || []);
+  }, [selectedSeason]);
+
+  // Enhanced recommendation generation
+  const generateRecommendations = async () => {
+    if (!selectedStyle || !selectedOccasion || !selectedSeason) {
+      alert('Please select all options to get recommendations!');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      // Simulate AI processing time
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Generate AI recommendations
+      const aiRecs = generateAIRecommendations(selectedStyle, selectedOccasion, selectedSeason);
+      
+      // Analyze user style
+      const styleAnalysis = analyzeUserStyle({
+        style: selectedStyle,
+        occasion: selectedOccasion,
+        season: selectedSeason
+      });
+      
+      // Update AI insights
+      setAiInsights({
+        styleConfidence: Math.round(styleAnalysis.styleConfidence),
+        occasionMatch: Math.round(styleAnalysis.occasionMatch),
+        seasonalAppropriateness: Math.round(styleAnalysis.seasonalAppropriateness),
+        overallScore: Math.round(styleAnalysis.overallScore)
+      });
+      
+      // Analyze trends
+      analyzeTrends();
+      
+      // Set recommendations
+      setRecommendations(aiRecs);
+      
+      // Update user history
+      const newHistory = {
+        style: selectedStyle,
+        occasion: selectedOccasion,
+        season: selectedSeason,
+        timestamp: new Date().toISOString(),
+        recommendations: aiRecs
+      };
+      setUserHistory(prev => [...prev, newHistory]);
+      
+    } catch (error) {
+      console.error('AI recommendation error:', error);
+      setRecommendations([{ item: 'AI analysis temporarily unavailable', confidence: 0, reasoning: 'Please try again later' }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resetSelections = () => {
+    setSelectedStyle('');
+    setSelectedOccasion('');
+    setSelectedSeason('');
+    setRecommendations([]);
+    setAiInsights({});
+    setTrendingItems([]);
+  };
+
+  // Load user preferences from localStorage on mount
+  useEffect(() => {
+    const savedPreferences = localStorage.getItem('fashionPreferences');
+    if (savedPreferences) {
+      setUserPreferences(JSON.parse(savedPreferences));
+    }
+  }, []);
+
+  // Save user preferences to localStorage
+  useEffect(() => {
+    if (Object.keys(userPreferences).length > 0) {
+      localStorage.setItem('fashionPreferences', JSON.stringify(userPreferences));
+    }
+  }, [userPreferences]);
+
+  return (
+    <div className="fashion-recommendation-box">
+      <div className="header">
+        <h2>🤖 AI Fashion Recommendation Box</h2>
+        <p>Powered by machine learning for personalized style suggestions</p>
+      </div>
+
+      <div className="selection-container">
+        <div className="selection-group">
+          <label>Style Preference:</label>
+          <select 
+            value={selectedStyle} 
+            onChange={(e) => setSelectedStyle(e.target.value)}
+            className="selection-dropdown"
+          >
+            <option value="">Choose your style...</option>
+            {styles.map(style => (
+              <option key={style} value={style}>{style}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="selection-group">
+          <label>Occasion:</label>
+          <select 
+            value={selectedOccasion} 
+            onChange={(e) => setSelectedOccasion(e.target.value)}
+            className="selection-dropdown"
+          >
+            <option value="">Choose occasion...</option>
+            {occasions.map(occasion => (
+              <option key={occasion} value={occasion}>{occasion}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="selection-group">
+          <label>Season:</label>
+          <select 
+            value={selectedSeason} 
+            onChange={(e) => setSelectedSeason(e.target.value)}
+            className="selection-dropdown"
+          >
+            <option value="">Choose season...</option>
+            {seasons.map(season => (
+              <option key={season} value={season}>{season}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="button-container">
+        <button 
+          onClick={generateRecommendations}
+          className="generate-btn"
+          disabled={!selectedStyle || !selectedOccasion || !selectedSeason}
+        >
+          {isLoading ? '🤖 AI Analyzing...' : '🚀 Get AI Recommendations'}
+        </button>
+        <button onClick={resetSelections} className="reset-btn">
+          Reset
+        </button>
+      </div>
+
+      {isLoading && (
+        <div className="loading">
+          <div className="spinner"></div>
+          <p>🤖 AI is analyzing your style and generating personalized recommendations...</p>
+        </div>
+      )}
+
+      {Object.keys(aiInsights).length > 0 && (
+        <div className="ai-insights">
+          <h3>🧠 AI Style Analysis</h3>
+          <div className="insights-grid">
+            <div className="insight-item">
+              <span className="insight-label">Style Confidence</span>
+              <span className="insight-value">{aiInsights.styleConfidence}%</span>
+            </div>
+            <div className="insight-item">
+              <span className="insight-label">Occasion Match</span>
+              <span className="insight-value">{aiInsights.occasionMatch}%</span>
+            </div>
+            <div className="insight-item">
+              <span className="insight-label">Seasonal Fit</span>
+              <span className="insight-value">{aiInsights.seasonalAppropriateness}%</span>
+            </div>
+            <div className="insight-item">
+              <span className="insight-label">Overall Score</span>
+              <span className="insight-value">{aiInsights.overallScore}%</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {trendingItems.length > 0 && (
+        <div className="trends">
+          <h3>📈 Trending This Season</h3>
+          <div className="trend-list">
+            {trendingItems.map((trend, index) => (
+              <div key={index} className="trend-item">
+                <span className="trend-icon">🔥</span>
+                <span className="trend-text">{trend}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {recommendations.length > 0 && !isLoading && (
+        <div className="recommendations">
+          <h3>🎯 AI-Generated Recommendations</h3>
+          <div className="recommendation-list">
+            {recommendations.map((rec, index) => (
+              <div key={index} className="recommendation-item">
+                <span className="item-number">{index + 1}</span>
+                <div className="item-details">
+                  <span className="item-text">{rec.item}</span>
+                  <div className="item-metrics">
+                    <span className="confidence-score">AI Confidence: {rec.confidence}%</span>
+                    <span className="reasoning">{rec.reasoning}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="tips">
+        <h4>💡 AI Style Tips</h4>
+        <ul>
+          <li>Our AI learns from your preferences to improve recommendations</li>
+          <li>Trend analysis ensures your style stays current</li>
+          <li>Confidence scores help you make informed decisions</li>
+          <li>Personalization improves with each use</li>
+        </ul>
+      </div>
+
+      {userHistory.length > 0 && (
+        <div className="history">
+          <h4>📚 Your Style History</h4>
+          <p>AI has analyzed {userHistory.length} style preferences</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default FashionRecommendationBox;

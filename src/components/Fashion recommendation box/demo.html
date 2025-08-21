@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Recommendation Box Demo</title>
+    <link rel="stylesheet" href="FashionRecommendationBox.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+        
+        .demo-header h1 {
+            font-size: 3rem;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .demo-header p {
+            font-size: 1.2rem;
+            color: #666;
+            margin: 0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .component-demo {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .component-demo h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>✨ Fashion Recommendation Box</h1>
+            <p>Interactive React Component Demo</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🎯 Smart Recommendations</h3>
+                <p>Get personalized outfit suggestions based on your style preferences, occasion, and season.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎨 Beautiful Design</h3>
+                <p>Modern gradient UI with smooth animations, hover effects, and responsive design.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📱 Mobile Friendly</h3>
+                <p>Optimized for all devices with touch-friendly interactions and adaptive layouts.</p>
+            </div>
+        </div>
+        
+        <div class="component-demo">
+            <h2>Try It Out!</h2>
+            <div id="root"></div>
+        </div>
+    </div>
+
+    <!-- React CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Component Script -->
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const FashionRecommendationBox = () => {
+            const [selectedStyle, setSelectedStyle] = useState('');
+            const [selectedOccasion, setSelectedOccasion] = useState('');
+            const [selectedSeason, setSelectedSeason] = useState('');
+            const [recommendations, setRecommendations] = useState([]);
+            const [isLoading, setIsLoading] = useState(false);
+
+            const styles = [
+                'Casual', 'Formal', 'Streetwear', 'Vintage', 'Minimalist', 
+                'Bohemian', 'Athletic', 'Business', 'Glamorous', 'Artistic'
+            ];
+
+            const occasions = [
+                'Work', 'Party', 'Date Night', 'Weekend', 'Travel', 
+                'Sport', 'Formal Event', 'Casual Outing', 'Creative Meeting'
+            ];
+
+            const seasons = ['Spring', 'Summer', 'Fall', 'Winter'];
+
+            const fashionDatabase = {
+                'Casual': {
+                    'Work': {
+                        'Spring': ['Light blazer with jeans', 'Polo shirt with chinos', 'Cardigan with blouse'],
+                        'Summer': ['Linen shirt with shorts', 'Cotton dress', 'T-shirt with khakis'],
+                        'Fall': ['Sweater with jeans', 'Blazer with t-shirt', 'Turtleneck with pants'],
+                        'Winter': ['Wool sweater with jeans', 'Fleece jacket', 'Thermal top with pants']
+                    },
+                    'Weekend': {
+                        'Spring': ['Denim jacket with dress', 'Sneakers with leggings', 'Hoodie with shorts'],
+                        'Summer': ['Tank top with shorts', 'Sundress', 'Flip flops with everything'],
+                        'Fall': ['Flannel shirt with jeans', 'Sweatshirt with leggings', 'Boots with dress'],
+                        'Winter': ['Puffer jacket with jeans', 'Beanie with sweater', 'Scarf with everything']
+                    }
+                },
+                'Formal': {
+                    'Work': {
+                        'Spring': ['Tailored suit with blouse', 'Pencil skirt with blazer', 'Dress pants with shirt'],
+                        'Summer': ['Lightweight suit', 'Midi dress with blazer', 'Linen pants with silk top'],
+                        'Fall': ['Wool suit', 'Knee-length dress', 'Turtleneck with blazer'],
+                        'Winter': ['Heavy wool suit', 'Cashmere sweater with skirt', 'Wool coat over dress']
+                    },
+                    'Formal Event': {
+                        'Spring': ['Cocktail dress', 'Tuxedo', 'Evening gown'],
+                        'Summer': ['Maxi dress', 'Light suit', 'Formal jumpsuit'],
+                        'Fall': ['Velvet dress', 'Dark suit', 'Silk gown'],
+                        'Winter': ['Sequined dress', 'Black tie suit', 'Fur stole over dress']
+                    }
+                },
+                'Streetwear': {
+                    'Weekend': {
+                        'Spring': ['Oversized hoodie with bike shorts', 'Crop top with high-waisted pants', 'Dad sneakers'],
+                        'Summer': ['Graphic tee with shorts', 'Crop top with skirt', 'Chunky sneakers'],
+                        'Fall': ['Oversized sweater with leggings', 'Crop top with high-waisted jeans', 'Platform sneakers'],
+                        'Winter': ['Puffer vest with hoodie', 'Crop top with high-waisted pants', 'Chunky boots']
+                    },
+                    'Creative Meeting': {
+                        'Spring': ['Statement jacket with basics', 'Bold accessories', 'Unique sneakers'],
+                        'Summer': ['Graphic print top', 'Statement pants', 'Colorful sneakers'],
+                        'Fall': ['Layered look with jacket', 'Bold colors', 'Statement shoes'],
+                        'Winter': ['Oversized coat', 'Layered textures', 'Bold footwear']
+                    }
+                }
+            };
+
+            const generateRecommendations = () => {
+                if (!selectedStyle || !selectedOccasion || !selectedSeason) {
+                    alert('Please select all options to get recommendations!');
+                    return;
+                }
+
+                setIsLoading(true);
+                
+                setTimeout(() => {
+                    const styleData = fashionDatabase[selectedStyle];
+                    if (styleData && styleData[selectedOccasion] && styleData[selectedOccasion][selectedSeason]) {
+                        setRecommendations(styleData[selectedOccasion][selectedSeason]);
+                    } else {
+                        setRecommendations(['Mix and match pieces from your wardrobe', 'Try combining different textures', 'Accessorize with statement pieces']);
+                    }
+                    setIsLoading(false);
+                }, 1000);
+            };
+
+            const resetSelections = () => {
+                setSelectedStyle('');
+                setSelectedOccasion('');
+                setSelectedSeason('');
+                setRecommendations([]);
+            };
+
+            return (
+                <div className="fashion-recommendation-box">
+                    <div className="header">
+                        <h2>✨ Fashion Recommendation Box</h2>
+                        <p>Get personalized style suggestions based on your preferences</p>
+                    </div>
+
+                    <div className="selection-container">
+                        <div className="selection-group">
+                            <label>Style Preference:</label>
+                            <select 
+                                value={selectedStyle} 
+                                onChange={(e) => setSelectedStyle(e.target.value)}
+                                className="selection-dropdown"
+                            >
+                                <option value="">Choose your style...</option>
+                                {styles.map(style => (
+                                    <option key={style} value={style}>{style}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="selection-group">
+                            <label>Occasion:</label>
+                            <select 
+                                value={selectedOccasion} 
+                                onChange={(e) => setSelectedOccasion(e.target.value)}
+                                className="selection-dropdown"
+                            >
+                                <option value="">Choose occasion...</option>
+                                {occasions.map(occasion => (
+                                    <option key={occasion} value={occasion}>{occasion}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="selection-group">
+                            <label>Season:</label>
+                            <select 
+                                value={selectedSeason} 
+                                onChange={(e) => setSelectedSeason(e.target.value)}
+                                className="selection-dropdown"
+                            >
+                                <option value="">Choose season...</option>
+                                {seasons.map(season => (
+                                    <option key={season} value={season}>{season}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="button-container">
+                        <button 
+                            onClick={generateRecommendations}
+                            className="generate-btn"
+                            disabled={!selectedStyle || !selectedOccasion || !selectedSeason}
+                        >
+                            {isLoading ? 'Generating...' : 'Get Recommendations'}
+                        </button>
+                        <button onClick={resetSelections} className="reset-btn">
+                            Reset
+                        </button>
+                    </div>
+
+                    {isLoading && (
+                        <div className="loading">
+                            <div className="spinner"></div>
+                            <p>Creating your perfect outfit...</p>
+                        </div>
+                    )}
+
+                    {recommendations.length > 0 && !isLoading && (
+                        <div className="recommendations">
+                            <h3>🎯 Your Style Recommendations</h3>
+                            <div className="recommendation-list">
+                                {recommendations.map((rec, index) => (
+                                    <div key={index} className="recommendation-item">
+                                        <span className="item-number">{index + 1}</span>
+                                        <span className="item-text">{rec}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="tips">
+                        <h4>💡 Style Tips</h4>
+                        <ul>
+                            <li>Mix high-end pieces with affordable basics</li>
+                            <li>Don't be afraid to experiment with colors</li>
+                            <li>Accessories can transform any outfit</li>
+                            <li>Confidence is your best accessory</li>
+                        </ul>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<FashionRecommendationBox />);
+    </script>
+</body>
+</html>

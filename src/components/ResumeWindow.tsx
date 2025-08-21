@@ -169,11 +169,26 @@ export const ResumeWindow: React.FC<ResumeWindowProps> = ({ onClose }) => {
             <h2 className="text-lg font-bold text-retro-green mb-2">🚀 Projects</h2>
             <div className="space-y-2">
               <div className="bg-muted p-3 rounded border border-border">
-                <h3 className="font-bold text-sm">Medical Symptom Diagnoser</h3>
+                <h3 className="font-bold text-sm">Multiple Disease Prediction System</h3>
                 <p className="text-xs text-muted-foreground">
-                  AI-powered system for preliminary medical symptom analysis. Built using Python, 
-                  machine learning algorithms, and natural language processing for accurate symptom assessment.
+                  <strong>Healthcare AI Application</strong> - A comprehensive Streamlit web app that predicts Diabetes, 
+                  Heart Disease, and Parkinson's using machine learning models. Features real-time predictions, 
+                  user-friendly interface, and pre-trained ML models.
                 </p>
+                <div className="flex gap-2 mt-2 text-xs">
+                  <span className="bg-blue-900 text-blue-300 px-2 py-1 rounded">Python</span>
+                  <span className="bg-green-900 text-green-300 px-2 py-1 rounded">Machine Learning</span>
+                  <span className="bg-purple-900 text-purple-300 px-2 py-1 rounded">Streamlit</span>
+                  <span className="bg-orange-900 text-orange-300 px-2 py-1 rounded">Healthcare AI</span>
+                </div>
+                <div className="flex gap-2 mt-2 text-xs">
+                  <a href="https://multiple-disease-prediction-app-app-cahregxftg44s93fd7jfvs.streamlit.app/" 
+                     target="_blank" rel="noopener noreferrer"
+                     className="text-retro-green hover:underline">🌐 Live Demo</a>
+                  <a href="https://github.com/Vi1en/multiple-disease-prediction-streamlit-app" 
+                     target="_blank" rel="noopener noreferrer"
+                     className="text-retro-green hover:underline">📁 GitHub</a>
+                </div>
               </div>
               <div className="bg-muted p-3 rounded border border-border">
                 <h3 className="font-bold text-sm">Fashion Recommendation Box</h3>

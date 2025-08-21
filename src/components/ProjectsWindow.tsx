@@ -19,57 +19,40 @@ export const ProjectsWindow: React.FC<ProjectsWindowProps> = ({ onClose }) => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [filter, setFilter] = useState<'all' | 'completed' | 'in-progress' | 'planned'>('all');
 
-  const projects: Project[] = [
+  const [projects] = useState<Project[]>([
     {
       id: 1,
-      title: 'Portfolio Website',
-      description: 'Pixel art themed personal portfolio built with React, TypeScript, and Tailwind CSS. Features retro desktop UI with draggable windows and interactive games.',
-      technologies: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
-      status: 'completed',
-      github: 'https://github.com/manab/portfolio'
+      title: "Multiple Disease Prediction System",
+      description: "A comprehensive healthcare AI application that predicts Diabetes, Heart Disease, and Parkinson's using machine learning models. Features real-time predictions, user-friendly interface, and pre-trained ML models.",
+      status: "completed",
+      technologies: ["Python", "Machine Learning", "Streamlit", "Scikit-learn", "Healthcare AI"],
+      github: "https://github.com/Vi1en/multiple-disease-prediction-streamlit-app"
     },
     {
       id: 2,
-      title: 'E-Commerce Platform',
-      description: 'Full-stack e-commerce solution with user authentication, product management, shopping cart, and payment integration.',
-      technologies: ['Node.js', 'Express', 'MongoDB', 'React', 'Stripe'],
-      status: 'completed',
-      link: 'https://shop.example.com',
-      github: 'https://github.com/manab/ecommerce'
+      title: "Fashion Recommendation Box",
+      description: "AI/ML-based fashion recommendation system that suggests personalized clothing based on user preferences and style analysis.",
+      status: "completed",
+      technologies: ["Python", "Machine Learning", "AI", "Recommendation System"],
+      github: "#"
     },
     {
       id: 3,
-      title: 'Task Management App',
-      description: 'Real-time collaborative task management application with drag-and-drop interface and team collaboration features.',
-      technologies: ['React', 'Socket.io', 'PostgreSQL', 'Redis'],
-      status: 'in-progress',
-      github: 'https://github.com/manab/task-manager'
+      title: "E-Commerce Platform",
+      description: "Full-stack e-commerce solution with React frontend, Node.js backend, and MongoDB database.",
+      status: "completed",
+      technologies: ["React", "Node.js", "MongoDB", "Express", "JavaScript"],
+      github: "#"
     },
     {
       id: 4,
-      title: 'AI Chat Assistant',
-      description: 'Intelligent chatbot powered by machine learning with natural language processing capabilities.',
-      technologies: ['Python', 'TensorFlow', 'FastAPI', 'React'],
-      status: 'in-progress',
-      github: 'https://github.com/manab/ai-chat'
-    },
-    {
-      id: 5,
-      title: 'Mobile Fitness App',
-      description: 'Cross-platform mobile application for tracking workouts, nutrition, and fitness goals with social features.',
-      technologies: ['React Native', 'Firebase', 'Redux', 'Expo'],
-      status: 'planned',
-      github: 'https://github.com/manab/fitness-app'
-    },
-    {
-      id: 6,
-      title: 'Blockchain DApp',
-      description: 'Decentralized application for secure document verification using blockchain technology.',
-      technologies: ['Solidity', 'Web3.js', 'React', 'IPFS'],
-      status: 'planned',
-      github: 'https://github.com/manab/blockchain-dapp'
+      title: "Task Management App",
+      description: "Real-time task management application with collaborative features and real-time updates.",
+      status: "completed",
+      technologies: ["React", "Socket.io", "PostgreSQL", "Node.js"],
+      github: "#"
     }
-  ];
+  ]);
 
   const filteredProjects = projects.filter(project => {
     if (filter === 'all') return true;
