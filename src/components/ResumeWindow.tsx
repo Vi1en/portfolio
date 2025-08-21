@@ -193,9 +193,23 @@ export const ResumeWindow: React.FC<ResumeWindowProps> = ({ onClose }) => {
               <div className="bg-muted p-3 rounded border border-border">
                 <h3 className="font-bold text-sm">Fashion Recommendation Box</h3>
                 <p className="text-xs text-muted-foreground">
-                  AI/ML-based fashion recommendation system that suggests personalized clothing 
-                  based on user preferences, style analysis, and trending patterns.
+                  <strong>AI Fashion Stylist</strong> - AI/ML-based fashion recommendation system that suggests personalized clothing 
+                  based on user preferences, style analysis, and trending patterns. Features intelligent outfit matching and style recommendations.
                 </p>
+                <div className="flex gap-2 mt-2 text-xs">
+                  <span className="bg-pink-900 text-pink-300 px-2 py-1 rounded">Python</span>
+                  <span className="bg-purple-900 text-purple-300 px-2 py-1 rounded">Machine Learning</span>
+                  <span className="bg-blue-900 text-blue-300 px-2 py-1 rounded">AI</span>
+                  <span className="bg-green-900 text-green-300 px-2 py-1 rounded">Fashion AI</span>
+                </div>
+                <div className="flex gap-2 mt-2 text-xs">
+                  <a href="https://spectacular-naiad-d809f7.netlify.app/#/ai-fashion-stylist" 
+                     target="_blank" rel="noopener noreferrer"
+                     className="text-retro-green hover:underline">🌐 Live Demo</a>
+                  <a href="https://github.com/Vi1en/ai-fashion-recommendation-box" 
+                     target="_blank" rel="noopener noreferrer"
+                     className="text-retro-green hover:underline">📁 GitHub</a>
+                </div>
               </div>
               <div className="bg-muted p-3 rounded border border-border">
                 <h3 className="font-bold text-sm">E-Commerce Platform</h3>

@@ -26,6 +26,7 @@ export const ProjectsWindow: React.FC<ProjectsWindowProps> = ({ onClose }) => {
       description: "A comprehensive healthcare AI application that predicts Diabetes, Heart Disease, and Parkinson's using machine learning models. Features real-time predictions, user-friendly interface, and pre-trained ML models.",
       status: "completed",
       technologies: ["Python", "Machine Learning", "Streamlit", "Scikit-learn", "Healthcare AI"],
+      link: "https://multiple-disease-prediction-app-app-cahregxftg44s93fd7jfvs.streamlit.app/",
       github: "https://github.com/Vi1en/multiple-disease-prediction-streamlit-app"
     },
     {
@@ -34,7 +35,8 @@ export const ProjectsWindow: React.FC<ProjectsWindowProps> = ({ onClose }) => {
       description: "AI/ML-based fashion recommendation system that suggests personalized clothing based on user preferences and style analysis.",
       status: "completed",
       technologies: ["Python", "Machine Learning", "AI", "Recommendation System"],
-      github: "#"
+      link: "https://spectacular-naiad-d809f7.netlify.app/#/ai-fashion-stylist",
+      github: "https://github.com/Vi1en/ai-fashion-recommendation-box"
     },
     {
       id: 3,
